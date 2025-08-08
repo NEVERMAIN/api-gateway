@@ -1,0 +1,8 @@
+server:
+  port: 8004
+
+api-gateway-sdk:
+  address: http://192.168.198.138:8001
+  system-id: api-gateway-sdk-test
+  system-name: '网关sdk测试过程'
+  system-registry: zookeeper://192.168.198.138:2181

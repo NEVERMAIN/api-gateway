@@ -1,0 +1,1 @@
+docker run -p 8902:8902 -p 7397:7397 -v ./config/application01.yaml:/app/config.yaml --name api-gateway-engine-01 -e SPRING_CONFIG_LOCATION=file:/app/config.yaml -d api-gateway-engine:1.0.1

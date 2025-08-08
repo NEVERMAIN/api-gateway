@@ -1,0 +1,1 @@
+docker run -p 8001:8001 --name api-gateway-center --network dev-ops_my-network -v /home/ubuntu/dev-ops/data/nginx:/data/nginx -v /var/run/docker.sock:/var/run/docker.sock -d system/api-gateway-center-app:1.0.1

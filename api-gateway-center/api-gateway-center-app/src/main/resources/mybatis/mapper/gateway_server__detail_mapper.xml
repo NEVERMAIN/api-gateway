@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.NEVERMAIN.gateway.center.infrastructure.dao.IGatewayServerDetailDao">
+
+
+    <resultMap id="GatewayServerDetailMap" type="io.github.NEVERMAIN.gateway.center.infrastructure.dao.po.GatewayServerDetail">
+        <id column="id" property="id"/>
+        <id column="group_id" property="groupId"/>
+        <id column="gateway_id" property="gatewayId"/>
+        <id column="gateway_name" property="gatewayName"/>
+        <id column="gateway_address" property="gatewayAddress"/>
+        <id column="status" property="status"/>
+        <id column="create_time" property="createTime"/>
+        <id column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <insert id="insert">
+        INSERT INTO gateway_server_detail(group_id, gateway_id, gateway_name, gateway_address, status, create_time, update_time)
+        VALUES (#{groupId}, #{gatewayId}, #{gatewayName}, #{gatewayAddress}, #{status}, now(), now())
+    </insert>
+
+
+    <update id="updateGatewayStatus">
+        UPDATE gateway_server_detail
+        SET status = #{status}
+        WHERE gateway_id = #{gatewayId}
+          AND gateway_address = #{gatewayAddress}
+    </update>
+
+    <select id="queryGatewayServerDetail"
+            resultMap="GatewayServerDetailMap">
+        SELECT group_id,
+               gateway_id,
+               gateway_name,
+               gateway_address,
+               status
+        FROM gateway_server_detail
+        WHERE gateway_id = #{gatewayId}
+          AND gateway_address = #{gatewayAddress}
+
+    </select>
+
+    <select id="queryGatewayServerDetailListByPage"
+            parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
+            resultMap="GatewayServerDetailMap">
+        SELECT id, group_id, gateway_id, gateway_name, gateway_address, status, create_time, update_time
+        FROM gateway_server_detail
+        <where>
+            <if test="null != data and data.groupId != ''">
+                AND group_id = #{data.groupId}
+            </if>
+            <if test="null != data and data.gatewayId != ''">
+                AND gateway_id = #{data.gatewayId}
+            </if>
+        </where>
+        order by id desc
+        limit #{pageStart}, #{pageEnd}
+    </select>
+
+
+    <select id="queryGatewayServerDetailListCountByPage"
+            parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
+            resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM gateway_server_detail
+        <where>
+            <if test="null != data and data.groupId != ''">
+                AND group_id = #{data.groupId}
+            </if>
+            <if test="null != data and data.gatewayId != ''">
+                AND gateway_id = #{data.gatewayId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryGatewayServerDetailList"
+            resultMap="GatewayServerDetailMap">
+        SELECT group_id, gateway_id, gateway_name, gateway_address, status
+        FROM gateway_server_detail
+    </select>
+
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.NEVERMAIN.gateway.center.infrastructure.dao.IApplicationInterfaceMethodDao">
+
+
+    <resultMap id="ApplicationInterfaceMethodMap"
+               type="io.github.NEVERMAIN.gateway.center.infrastructure.dao.po.ApplicationInterfaceMethod">
+        <id column="id" property="id"/>
+        <id column="system_id" property="systemId"/>
+        <id column="interface_id" property="interfaceId"/>
+        <id column="method_id" property="methodId"/>
+        <id column="method_name" property="methodName"/>
+        <id column="parameter_type" property="parameterType"/>
+        <id column="uri" property="uri"/>
+        <id column="auth" property="auth"/>
+        <id column="http_command_type" property="httpCommandType"/>
+        <id column="create_time" property="createTime"/>
+        <id column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <insert id="insert">
+        INSERT INTO application_interface_method
+        (system_id, interface_id, method_id, method_name, parameter_type, uri,
+         auth, http_command_type, create_time, update_time)
+        VALUES (#{systemId}, #{interfaceId}, #{methodId}, #{methodName}, #{parameterType}, #{uri}, #{auth},
+                #{httpCommandType}, now(), now())
+    </insert>
+
+
+    <select id="queryApplicationInterfaceMethodList"
+            resultMap="ApplicationInterfaceMethodMap">
+        SELECT system_id,   interface_id,  method_id,  method_name,   parameter_type,  uri,  auth,  http_command_type
+        FROM application_interface_method
+        WHERE system_id = #{systemId}
+          AND interface_id = #{interfaceId}
+    </select>
+
+
+    <select id="queryApplicationInterfaceMethodListCountByPage"
+            parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
+            resultType="java.lang.Integer">
+        SELECT COUNT(id)
+        FROM application_interface_method
+        <where>
+            <if test="data != null and data.systemId != ''">
+                AND system_id = #{data.systemId}
+            </if>
+            <if test="data != null and data.interfaceId != ''">
+                AND interface_id = #{data.interfaceId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryApplicationInterfaceMethodListByPage"
+            parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
+           resultMap="ApplicationInterfaceMethodMap">
+        SELECT id ,system_id, interface_id, method_id, method_name, parameter_type, uri, auth, http_command_type, create_time, update_time
+        FROM application_interface_method
+        <where>
+            <if test="data != null and data.systemId != ''">
+                AND system_id = #{data.systemId}
+            </if>
+            <if test="data != null and data.interfaceId != ''">
+                AND interface_id = #{data.interfaceId}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{pageStart}, #{pageSize}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,1 @@
+package io.github.NEVERMAIN.gateway.center.infrastructure.gateway.dto;

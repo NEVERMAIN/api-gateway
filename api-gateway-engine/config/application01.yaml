@@ -1,0 +1,14 @@
+server:
+  port: 8902
+
+api-gateway:
+  # 注册中心:从在这里获取接口信息完成注册网关操作
+  address: http://192.168.198.138:8001
+  # 服务组ID
+  group-id: 10001
+  # 网关唯一标识
+  gateway-id: api-gateway-g1
+  # 网关名称
+  gateway-name: '电商配送网关'
+  # 网关服务地址:网关通信服务Netty启动时使用IP和端口
+  gateway-address: 192.168.198.138:7397

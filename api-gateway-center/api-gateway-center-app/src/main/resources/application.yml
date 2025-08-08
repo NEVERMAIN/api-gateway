@@ -1,0 +1,5 @@
+spring:
+  config:
+    name: api-gateway-center-app
+  profiles:
+    active: dev

@@ -1,0 +1,1 @@
+package io.github.NEVERMAIN.gateway.center.domain.register.adapter.port;
