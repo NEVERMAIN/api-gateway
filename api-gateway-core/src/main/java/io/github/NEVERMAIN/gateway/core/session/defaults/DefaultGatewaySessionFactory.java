@@ -3,6 +3,7 @@ package io.github.NEVERMAIN.gateway.core.session.defaults;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSource;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceFactory;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
+import io.github.NEVERMAIN.gateway.core.datasource.pooled.PooledDatasourceFactory;
 import io.github.NEVERMAIN.gateway.core.datasource.unpooled.UnpooledDataSourceFactory;
 import io.github.NEVERMAIN.gateway.core.executor.Executor;
 import io.github.NEVERMAIN.gateway.core.session.Configuration;
@@ -23,7 +24,7 @@ public class DefaultGatewaySessionFactory implements GatewaySessionFactory {
     @Override
     public GatewaySession openSession(String uri) {
         // 1.获取数据源连接信息
-        DataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
+        DataSourceFactory dataSourceFactory = new PooledDatasourceFactory();
         dataSourceFactory.setProperties(configuration, uri, DataSourceType.Dubbo);
         DataSource datasource = dataSourceFactory.getDatasource();
         // 2.创建执行器
