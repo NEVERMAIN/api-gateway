@@ -4,6 +4,7 @@ import io.github.NEVERMAIN.gateway.core.datasource.Connection;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSource;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
 import io.github.NEVERMAIN.gateway.core.datasource.connection.DubboConnection;
+import io.github.NEVERMAIN.gateway.core.datasource.connection.HTTPConnection;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
 import io.github.NEVERMAIN.gateway.core.session.Configuration;
 import org.apache.dubbo.config.ApplicationConfig;
@@ -25,8 +26,7 @@ public class UnpooledDataSource implements DataSource {
     public Connection getConnection() {
         switch (dataSourceType){
             case HTTP:
-                // TODO
-                break;
+                return new HTTPConnection(httpStatement);
             case Dubbo:
                 // 1.配置信息
                 String application = httpStatement.getApplication();

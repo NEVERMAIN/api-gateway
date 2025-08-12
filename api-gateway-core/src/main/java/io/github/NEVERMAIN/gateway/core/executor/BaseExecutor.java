@@ -39,19 +39,24 @@ public abstract class BaseExecutor implements Executor {
         String[] parameterTypes = new String[]{parameterType};
         Object[] args = SimpleTypeRegistry.isSimpleType(parameterType) ? params.values().toArray() :
                 new Object[]{params};
+        String parameterName = httpStatement.getParameterName();
+        String[] parametersName = new String[]{"ignore"};
+        if(parameterName != null){
+            parametersName[0] = parameterName;
+        }
 
-        log.info("执行调用 method:{}#{}.{}({}) args:{}",httpStatement.getApplication(),httpStatement.getInterfaceName(),
-                httpStatement.getMethodName(), JSON.toJSONString(parameterTypes),JSON.toJSONString(args));
+        log.info("执行调用 method:{}#{}.{}({}) args:{}", httpStatement.getApplication(), httpStatement.getInterfaceName(),
+                httpStatement.getMethodName(), JSON.toJSONString(parameterTypes), JSON.toJSONString(args));
 
         try {
-            Object data = doExecute(methodName, parameterTypes, args);
+            Object data = doExecute(methodName, parameterTypes, parametersName, args);
             return SessionResult.buildSuccess(data);
-        }catch (Exception e){
+        } catch (Exception e) {
             return SessionResult.buildError(e.getMessage());
         }
 
     }
 
 
-    protected abstract Object doExecute(String method, String[] parameterTypes, Object[] args);
+    protected abstract Object doExecute(String method, String[] parameterTypes, String[] parametersName, Object[] args);
 }

@@ -13,7 +13,7 @@ public class SimpleExecutor extends BaseExecutor {
     }
 
     @Override
-    protected Object doExecute(String method, String[] parameterTypes, Object[] args) {
+    protected Object doExecute(String method, String[] parameterTypes, String[] parametersName, Object[] args) {
         /*
          * 调用服务
          * 封装参数:
@@ -21,6 +21,6 @@ public class SimpleExecutor extends BaseExecutor {
          *   02(允许): io.github.NEVERMAIN.gateway.rpc.dto.XReq
          *   03(拒绝): java.lang.String、io.github.NEVERMAIN.gateway.rpc.dto.XReq
          */
-        return connection.execute(method, parameterTypes,new String[]{"ignore"} ,args);
+        return connection.execute(method, parameterTypes,parametersName ,args);
     }
 }

@@ -24,8 +24,9 @@ public class DefaultGatewaySessionFactory implements GatewaySessionFactory {
     @Override
     public GatewaySession openSession(String uri) {
         // 1.获取数据源连接信息
-        DataSourceFactory dataSourceFactory = new PooledDatasourceFactory();
-        dataSourceFactory.setProperties(configuration, uri, DataSourceType.Dubbo);
+        DataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
+        // todo 这里的 DataSourceType 应该动态切换
+        dataSourceFactory.setProperties(configuration, uri, DataSourceType.HTTP);
         DataSource datasource = dataSourceFactory.getDatasource();
         // 2.创建执行器
         Executor executor = configuration.newExecutor(datasource.getConnection());

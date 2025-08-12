@@ -1,5 +1,7 @@
 package io.github.NEVERMAIN.gateway.core.mapping;
 
+import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
+
 /**
  * @description 网关接口映射信息
  */
@@ -10,6 +12,13 @@ public class HttpStatement {
      * eg: api-gateway-test
      */
     private String application;
+
+    /**
+     * 系统类型
+     * eg: DUBBO、HTTP、MQ
+     */
+    private DataSourceType systemType;
+
     /**
      * 服务接口 RPC、HTTP
      * eg: io.github.NEVERMAIN.gateway.rpc.IActivityBooth
@@ -37,7 +46,18 @@ public class HttpStatement {
     /**
      * 是否需要鉴权 true -> 需要; false -> 不需要
      */
-    private  boolean auth;
+    private boolean auth;
+
+    /**
+     * 目标服务的地址
+     * eg: http://127.0.0.1:8083
+     */
+    private String targetAddress;
+    /**
+     * 方法参数的名称
+     * eg: str
+     */
+    private String parameterName;
 
 
     public HttpStatement(String application, String interfaceName, String methodName, String uri,
@@ -49,6 +69,9 @@ public class HttpStatement {
         this.commandType = commandType;
         this.parameterType = parameterType;
         this.auth = auth;
+    }
+
+    public HttpStatement() {
     }
 
     public String getApplication() {
@@ -105,5 +128,29 @@ public class HttpStatement {
 
     public void setAuth(boolean auth) {
         this.auth = auth;
+    }
+
+    public String getTargetAddress() {
+        return targetAddress;
+    }
+
+    public void setTargetAddress(String targetAddress) {
+        this.targetAddress = targetAddress;
+    }
+
+    public DataSourceType getSystemType() {
+        return systemType;
+    }
+
+    public void setSystemType(DataSourceType systemType) {
+        this.systemType = systemType;
+    }
+
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public void setParameterName(String parameterName) {
+        this.parameterName = parameterName;
     }
 }
