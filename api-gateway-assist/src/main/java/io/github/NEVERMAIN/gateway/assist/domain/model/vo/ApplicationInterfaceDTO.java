@@ -17,6 +17,10 @@ public class ApplicationInterfaceDTO {
      */
     private String interfaceName;
     /**
+     * 接口协议类型
+     */
+    private String protocolType;
+    /**
      * 接口版本
      */
     private String interfaceVersion;
@@ -66,5 +70,13 @@ public class ApplicationInterfaceDTO {
 
     public void setInterfaceId(String interfaceId) {
         this.interfaceId = interfaceId;
+    }
+
+    public String getProtocolType() {
+        return protocolType;
+    }
+
+    public void setProtocolType(String protocolType) {
+        this.protocolType = protocolType;
     }
 }

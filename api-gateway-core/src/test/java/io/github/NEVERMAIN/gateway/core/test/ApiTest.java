@@ -64,7 +64,7 @@ public class ApiTest {
                 "java.lang.String",
                 false
         );
-        httpStatement01.setSystemType(DataSourceType.Dubbo);
+        httpStatement01.setSystemType(DataSourceType.RPC);
 
         HttpStatement httpStatement02 = new HttpStatement(
                 "api-gateway-test",
@@ -75,7 +75,7 @@ public class ApiTest {
                 "io.github.NEVERMAIN.gateway.rpc.dto.XReq",
                 true
         );
-        httpStatement02.setSystemType(DataSourceType.Dubbo);
+        httpStatement02.setSystemType(DataSourceType.RPC);
 
         HttpStatement httpStatement03 = new HttpStatement();
         httpStatement03.setApplication("api-gateway-test");

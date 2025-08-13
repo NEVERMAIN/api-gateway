@@ -5,8 +5,17 @@ package io.github.NEVERMAIN.gateway.core.datasource;
  */
 public enum DataSourceType {
 
-    Dubbo,
+    RPC,
     HTTP,
-    MQ
+    MQ ;
+
+    public static DataSourceType getDataSourceType(String type) {
+        for (DataSourceType value : DataSourceType.values()) {
+            if (value.name().equals(type)) {
+                return value;
+            }
+        }
+        return null;
+    }
 
 }

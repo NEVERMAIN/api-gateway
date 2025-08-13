@@ -6,6 +6,7 @@ import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
 import io.github.NEVERMAIN.gateway.core.datasource.pooled.PooledDatasourceFactory;
 import io.github.NEVERMAIN.gateway.core.datasource.unpooled.UnpooledDataSourceFactory;
 import io.github.NEVERMAIN.gateway.core.executor.Executor;
+import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
 import io.github.NEVERMAIN.gateway.core.session.Configuration;
 import io.github.NEVERMAIN.gateway.core.session.GatewaySession;
 import io.github.NEVERMAIN.gateway.core.session.GatewaySessionFactory;
@@ -25,8 +26,8 @@ public class DefaultGatewaySessionFactory implements GatewaySessionFactory {
     public GatewaySession openSession(String uri) {
         // 1.获取数据源连接信息
         DataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
-        // todo 这里的 DataSourceType 应该动态切换
-        dataSourceFactory.setProperties(configuration, uri, DataSourceType.HTTP);
+        HttpStatement httpStatement = configuration.getHttpStatement(uri);
+        dataSourceFactory.setProperties(configuration, httpStatement, httpStatement.getSystemType());
         DataSource datasource = dataSourceFactory.getDatasource();
         // 2.创建执行器
         Executor executor = configuration.newExecutor(datasource.getConnection());

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @description: 网关注册服务
+ * @description 网关注册服务
  */
 public class GatewayCenterService {
 
@@ -66,7 +66,13 @@ public class GatewayCenterService {
 
     }
 
-
+    /**
+     * 从网关中心拉取应用服务和接口的配置信息到本地完成注册
+     * @param address 网关管理中心的地址
+     * @param gatewayId 网关唯一ID
+     * @param systemId 系统唯一ID
+     * @return
+     */
     public ApplicationSystemRichInfo pullApplicationSystemRichInfo(String address, String gatewayId, String systemId) {
 
         log.info("从网关中心拉取应用服务和接口的配置信息到本地完成注册[开始],gatewayId:{} systemId:{}", gatewayId, systemId);
@@ -95,7 +101,11 @@ public class GatewayCenterService {
         return result.getData();
     }
 
-
+    /**
+     * 从网关中心拉取Redis配置信息
+     * @param address 网关管理中心的地址
+     * @return
+     */
     public Map<String, String> queryRedisConfig(String address) {
 
         HashMap<String, Object> params = new HashMap<>();

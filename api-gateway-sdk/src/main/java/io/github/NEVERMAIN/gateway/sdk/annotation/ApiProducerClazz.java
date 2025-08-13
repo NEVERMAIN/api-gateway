@@ -11,5 +11,7 @@ public @interface ApiProducerClazz {
     String interfaceName() default "";
     /** 接口版本 */
     String interfaceVersion() default "";
+    /** 协议类型 */
+    String protocolType() default "RPC";
 
 }

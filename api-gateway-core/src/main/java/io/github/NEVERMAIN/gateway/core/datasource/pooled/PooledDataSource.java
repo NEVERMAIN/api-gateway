@@ -34,7 +34,7 @@ public class PooledDataSource implements DataSource {
         switch(dataSourceType){
             case HTTP:
                 break;
-            case Dubbo:
+            case RPC:
                 // 1.创建服务的唯一标识
                 String key = buildServiceKey(httpStatement);
                 // 2.从缓存中获取 GenericService

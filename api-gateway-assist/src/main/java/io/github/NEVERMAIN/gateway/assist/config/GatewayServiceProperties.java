@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "api-gateway")
 public class GatewayServiceProperties {
 
-    /** 注册中心地址 */
+    /** 网关管理中心地址 */
     private String address;
     /** 服务分组ID */
     private String groupId;

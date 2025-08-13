@@ -72,6 +72,10 @@ public class ApplicationSystemRichInfoDTO {
          */
         private String interfaceName;
         /**
+         * 协议类型：RPC、HTTP
+         */
+        private String protocolType;
+        /**
          * 接口版本
          */
         private String interfaceVersion;

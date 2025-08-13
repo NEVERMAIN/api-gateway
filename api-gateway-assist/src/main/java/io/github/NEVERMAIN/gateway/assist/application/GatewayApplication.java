@@ -7,6 +7,7 @@ import io.github.NEVERMAIN.gateway.assist.domain.model.vo.ApplicationInterfaceDT
 import io.github.NEVERMAIN.gateway.assist.domain.model.vo.ApplicationInterfaceMethodDTO;
 import io.github.NEVERMAIN.gateway.assist.domain.model.vo.ApplicationSystemDTO;
 import io.github.NEVERMAIN.gateway.assist.domain.service.GatewayCenterService;
+import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpCommandType;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
 import io.github.NEVERMAIN.gateway.core.session.Configuration;
@@ -78,13 +79,13 @@ public class GatewayApplication implements ApplicationContextAware, ApplicationL
         }
     }
 
-    public void receiveMessage(Object message){
+    public void receiveMessage(Object message) {
         log.info("【事件通知】接收注册中心推送消息 message：{}", message);
         addMappers(message.toString().substring(1, message.toString().length() - 1));
     }
 
 
-    public void addMappers(){
+    public void addMappers() {
         addMappers("");
     }
 
@@ -97,24 +98,54 @@ public class GatewayApplication implements ApplicationContextAware, ApplicationL
         for (ApplicationSystemDTO systemInfo : applicationSystemDTOList) {
             List<ApplicationInterfaceDTO> interfaceInfoList = systemInfo.getApplicationInterfaceDTOList();
             for (ApplicationInterfaceDTO interfaceInfo : interfaceInfoList) {
-                // 3.1.创建配置信息,加载注册到配置类
-                configuration.registryConfig(systemInfo.getSystemId(), systemInfo.getSystemRegistry(), interfaceInfo.getInterfaceId(), interfaceInfo.getInterfaceVersion());
                 // 3.2. 注册系统服务接口信息
                 List<ApplicationInterfaceMethodDTO> methodInfoList = interfaceInfo.getApplicationInterfaceMethodDTOList();
                 for (ApplicationInterfaceMethodDTO methodInfo : methodInfoList) {
 
-                    HttpStatement httpStatement = new HttpStatement(
-                            systemInfo.getSystemId(),
-                            interfaceInfo.getInterfaceId(),
-                            methodInfo.getMethodId(),
-                            methodInfo.getUri(),
-                            HttpCommandType.valueOf(methodInfo.getHttpCommandType()),
-                            methodInfo.getParameterType(),
-                            methodInfo.getAuth().equals(1));
+                    if ("RPC".equalsIgnoreCase(interfaceInfo.getProtocolType())) {
+                        // 3.1.RPC 接口,创建配置信息,加载注册到配置类
+                        configuration.registryConfig(systemInfo.getSystemId(), systemInfo.getSystemRegistry(),
+                                interfaceInfo.getInterfaceId(), interfaceInfo.getInterfaceVersion());
 
-                    configuration.addMapper(httpStatement);
-                    log.info("网关服务注册映射方法 系统:{} 接口:{} 方法:{}", systemInfo.getSystemId(), interfaceInfo.getInterfaceId(), methodInfo.getMethodId());
+//                        httpStatement = new HttpStatement(
+//                                systemInfo.getSystemId(),
+//                                interfaceInfo.getInterfaceId(),
+//                                methodInfo.getMethodId(),
+//                                methodInfo.getUri(),
+//                                HttpCommandType.valueOf(methodInfo.getHttpCommandType()),
+//                                methodInfo.getParameterType(),
+//                                methodInfo.getAuth().equals(1));
 
+                        HttpStatement httpStatement = new HttpStatement();
+                        httpStatement.setApplication(systemInfo.getSystemId());
+                        httpStatement.setSystemType(DataSourceType.getDataSourceType(interfaceInfo.getProtocolType()));
+                        httpStatement.setInterfaceName(interfaceInfo.getInterfaceId());
+                        httpStatement.setMethodName(methodInfo.getMethodId());
+                        httpStatement.setUri(methodInfo.getUri());
+                        httpStatement.setCommandType(HttpCommandType.valueOf(methodInfo.getHttpCommandType()));
+                        httpStatement.setParameterType(methodInfo.getParameterType());
+                        httpStatement.setAuth(methodInfo.getAuth().equals(1));
+
+                        configuration.addMapper(httpStatement);
+                        log.info("[RPC]网关服务注册映射方法 httpStatement:{}", JSON.toJSONString(httpStatement));
+
+                    } else if ("HTTP".equalsIgnoreCase(interfaceInfo.getProtocolType())) {
+
+                        HttpStatement httpStatement = new HttpStatement();
+                        httpStatement.setApplication(systemInfo.getSystemId());
+                        httpStatement.setSystemAddress(systemInfo.getSystemAddress());
+                        httpStatement.setSystemType(DataSourceType.getDataSourceType(interfaceInfo.getProtocolType()));
+                        httpStatement.setInterfaceName(interfaceInfo.getInterfaceId());
+                        httpStatement.setMethodName(methodInfo.getMethodId());
+                        httpStatement.setUri(methodInfo.getUri());
+                        httpStatement.setCommandType(HttpCommandType.valueOf(methodInfo.getHttpCommandType()));
+                        httpStatement.setParameterType(methodInfo.getParameterType());
+                        httpStatement.setParameterName(methodInfo.getParameterName());
+                        httpStatement.setAuth(methodInfo.getAuth().equals(1));
+
+                        configuration.addMapper(httpStatement);
+                        log.info("[HTTP]网关服务注册映射方法 httpStatement:{}", JSON.toJSONString(httpStatement));
+                    }
                 }
             }
         }

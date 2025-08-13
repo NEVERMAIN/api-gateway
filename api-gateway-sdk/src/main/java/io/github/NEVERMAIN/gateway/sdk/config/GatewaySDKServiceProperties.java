@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("api-gateway-sdk")
 public class GatewaySDKServiceProperties {
 
-    /** 网关注册中心地址 */
+    /** 网关管理中心地址 */
     private String address;
     /** 系统标识 */
     private String systemId;

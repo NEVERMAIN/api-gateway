@@ -15,8 +15,7 @@ public class PooledDatasourceFactory implements DataSourceFactory {
     }
 
     @Override
-    public void setProperties(Configuration configuration, String uri, DataSourceType dataSourceType) {
-        HttpStatement httpStatement = configuration.getHttpStatement(uri);
+    public void setProperties(Configuration configuration, HttpStatement httpStatement, DataSourceType dataSourceType) {
         pooledDataSource.setConfiguration(configuration);
         pooledDataSource.setHttpStatement(httpStatement);
         pooledDataSource.setDataSourceType(dataSourceType);

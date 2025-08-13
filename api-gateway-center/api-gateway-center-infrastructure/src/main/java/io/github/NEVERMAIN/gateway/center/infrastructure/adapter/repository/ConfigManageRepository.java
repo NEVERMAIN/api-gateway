@@ -141,6 +141,7 @@ public class ConfigManageRepository implements IConfigManageRepository {
             applicationInterfaceVO.setSystemId(applicationInterface.getSystemId());
             applicationInterfaceVO.setInterfaceId(applicationInterface.getInterfaceId());
             applicationInterfaceVO.setInterfaceName(applicationInterface.getInterfaceName());
+            applicationInterfaceVO.setProtocolType(applicationInterface.getProtocolType());
             applicationInterfaceVO.setInterfaceVersion(applicationInterface.getInterfaceVersion());
             // 放入列表中
             applicationInterfaceVOS.add(applicationInterfaceVO);

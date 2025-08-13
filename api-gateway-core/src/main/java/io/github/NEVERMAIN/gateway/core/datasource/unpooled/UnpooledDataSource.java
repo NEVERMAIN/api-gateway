@@ -24,10 +24,10 @@ public class UnpooledDataSource implements DataSource {
 
     @Override
     public Connection getConnection() {
-        switch (dataSourceType){
+        switch (dataSourceType) {
             case HTTP:
                 return new HTTPConnection(httpStatement);
-            case Dubbo:
+            case RPC:
                 // 1.配置信息
                 String application = httpStatement.getApplication();
                 String interfaceName = httpStatement.getInterfaceName();
@@ -40,7 +40,7 @@ public class UnpooledDataSource implements DataSource {
             default:
                 break;
         }
-        throw new RuntimeException("DataSourceType: ["+ dataSourceType + "] 没有对应的数据源实现.");
+        throw new RuntimeException("DataSourceType: [" + dataSourceType + "] 没有对应的数据源实现.");
     }
 
     public void setDataSourceType(DataSourceType dataSourceType) {

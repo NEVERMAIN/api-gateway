@@ -31,6 +31,11 @@ public class ApplicationInterfaceVO {
      */
     private String interfaceVersion;
     /**
+     * 接口协议类型
+     */
+    private String protocolType;
+
+    /**
      * 接口方法信息
      */
     private List<ApplicationInterfaceMethodVO> applicationInterfaceMethodVOList;

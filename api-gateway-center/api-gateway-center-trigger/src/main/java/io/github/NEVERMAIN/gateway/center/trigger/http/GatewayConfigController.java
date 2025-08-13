@@ -96,10 +96,10 @@ public class GatewayConfigController implements IGatewayConfigManager {
             List<GatewayServerDetailVO> gatewayServerDetailVOList = configManageService.queryGatewayServerDetailList();
             log.info(" 网关服务节点详情列表 gatewayServerDetailVOList:{} ", JSON.toJSONString(gatewayServerDetailVOList));
             // 3.组装 Nginx 网关刷新配置信息
-            NginxConfig nginxConfig = loadBalancingService.assembleNginxConfig(gatewayServerDetailVOList);
-            log.info(" Nginx 配置信息 nginxConfig:{} ", JSON.toJSONString(nginxConfig));
-            // 4.刷新 Nginx 配置
-            loadBalancingService.updateNginxConfig(nginxConfig);
+//            NginxConfig nginxConfig = loadBalancingService.assembleNginxConfig(gatewayServerDetailVOList);
+//            log.info(" Nginx 配置信息 nginxConfig:{} ", JSON.toJSONString(nginxConfig));
+//            // 4.刷新 Nginx 配置
+//            loadBalancingService.updateNginxConfig(nginxConfig);
 
             // 2.返回结果
             return Response.<Boolean>builder()
@@ -225,6 +225,7 @@ public class GatewayConfigController implements IGatewayConfigManager {
         applicationInterfaceDTO.setSystemId(applicationInterfaceVO.getSystemId());
         applicationInterfaceDTO.setInterfaceId(applicationInterfaceVO.getInterfaceId());
         applicationInterfaceDTO.setInterfaceName(applicationInterfaceVO.getInterfaceName());
+        applicationInterfaceDTO.setProtocolType(applicationInterfaceVO.getProtocolType());
         applicationInterfaceDTO.setInterfaceVersion(applicationInterfaceVO.getInterfaceVersion());
 
         applicationInterfaceDTO.setApplicationInterfaceMethodDTOList(getApplicationInterfaceMethodDTOList(applicationInterfaceVO));

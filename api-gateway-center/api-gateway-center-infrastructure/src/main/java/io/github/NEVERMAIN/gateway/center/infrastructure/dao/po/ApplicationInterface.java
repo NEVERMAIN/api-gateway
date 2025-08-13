@@ -28,6 +28,10 @@ public class ApplicationInterface {
      */
     private String interfaceName;
     /**
+     * 接口协议类型
+     */
+    private String protocolType;
+    /**
      * 接口版本
      */
     private String interfaceVersion;

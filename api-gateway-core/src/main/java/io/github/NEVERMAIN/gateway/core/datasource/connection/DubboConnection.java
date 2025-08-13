@@ -32,7 +32,7 @@ public class DubboConnection implements Connection {
 
     @Override
     public Object execute(String method, String[] parameterTypes, String[] parametersName, Object[] args) {
-        log.info("Dubbe 泛化调用. 方法:{} 参数类型:{} 参数名称:{} 参数:{}", method, parameterTypes, parametersName, args);
+        log.info("Dubbo 泛化调用. 方法:{} 参数类型:{} 参数名称:{} 参数:{}", method, parameterTypes, parametersName, args);
         return genericService.$invoke(method,parameterTypes,args);
     }
 }

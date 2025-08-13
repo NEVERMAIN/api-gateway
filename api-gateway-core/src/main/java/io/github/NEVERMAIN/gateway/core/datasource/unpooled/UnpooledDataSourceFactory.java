@@ -3,6 +3,7 @@ package io.github.NEVERMAIN.gateway.core.datasource.unpooled;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSource;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceFactory;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
+import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
 import io.github.NEVERMAIN.gateway.core.session.Configuration;
 
 /**
@@ -17,9 +18,9 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
     }
 
     @Override
-    public void setProperties(Configuration configuration, String uri, DataSourceType dataSourceType) {
+    public void setProperties(Configuration configuration, HttpStatement httpStatement, DataSourceType dataSourceType) {
         this.dataSource.setConfiguration(configuration);
-        this.dataSource.setHttpStatement(configuration.getHttpStatement(uri));
+        this.dataSource.setHttpStatement(httpStatement);
         this.dataSource.setDataSourceType(dataSourceType);
     }
 
