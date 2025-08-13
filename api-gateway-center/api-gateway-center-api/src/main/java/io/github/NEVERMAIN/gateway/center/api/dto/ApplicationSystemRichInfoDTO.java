@@ -35,10 +35,6 @@ public class ApplicationSystemRichInfoDTO {
          */
         private String systemName;
         /**
-         * 系统类型：RPC、HTTP
-         */
-        private String systemType;
-        /**
          * 系统注册中心：ZK、ETCD、NACOS
          */
         private String systemRegistry;
@@ -108,10 +104,6 @@ public class ApplicationSystemRichInfoDTO {
          */
         private String methodName;
         /**
-         * 协议类型：RPC、HTTP
-         */
-        private String protocolType;
-        /**
          * 参数类型(RPC 限定单参数注册):
          * new String[]{\"java.lang.String\"}、
          * new String[]{\"io.github.NEVERMAIN.gateway.rpc.dto.XReq\"}
@@ -135,10 +127,6 @@ public class ApplicationSystemRichInfoDTO {
         private String httpCommandType;
 
     }
-
-
-
-
 
 
 }

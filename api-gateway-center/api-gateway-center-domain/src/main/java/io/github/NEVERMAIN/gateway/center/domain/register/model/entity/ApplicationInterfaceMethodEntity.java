@@ -32,6 +32,11 @@ public class ApplicationInterfaceMethodEntity {
      */
     private String parameterType;
     /**
+     * 参数名称
+     */
+    private String parameterName;
+
+    /**
      * 网关接口
      */
     private String uri;

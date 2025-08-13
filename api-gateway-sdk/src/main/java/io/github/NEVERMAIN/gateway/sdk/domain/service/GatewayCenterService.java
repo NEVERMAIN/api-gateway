@@ -26,14 +26,23 @@ public class GatewayCenterService {
 
     private static final String REGISTER_EVENT_URI = "/wg/admin/register/registerEvent";
 
-    public void doRegisterApplication(String address, String systemId, String systemName, String systemType, String systemRegistry) {
+    /**
+     * 注册系统应用信息
+     *
+     * @param address        网关管理中心地址
+     * @param systemId       系统唯一ID
+     * @param systemName     系统名称
+     * @param systemRegistry 系统注册中心中心
+     * @param systemAddress  系统地址
+     */
+    public void doRegisterApplication(String address, String systemId, String systemName, String systemRegistry, String systemAddress) {
 
         // 1.构建参数
         HashMap<String, Object> params = new HashMap<>();
         params.put("systemId", systemId);
         params.put("systemName", systemName);
-        params.put("systemType", systemType);
         params.put("systemRegistry", systemRegistry);
+        params.put("systemAddress", systemAddress);
 
         // 2.构建请求路径
         String fullAddress = address + REGISTER_APPLICATION_URI;
@@ -54,13 +63,24 @@ public class GatewayCenterService {
         }
     }
 
+    /**
+     * 注册应用服务接口信息
+     *
+     * @param address          网关管理中心地址
+     * @param systemId         系统唯一ID
+     * @param interfaceId      接口唯一ID
+     * @param interfaceName    接口名称
+     * @param protocolType     访问协议类型
+     * @param interfaceVersion 接口版本
+     */
     public void doRegisterApplicationInterface(String address, String systemId, String interfaceId,
-                                               String interfaceName, String interfaceVersion) {
+                                               String interfaceName, String protocolType, String interfaceVersion) {
         // 1.构建参数
         HashMap<String, Object> params = new HashMap<>();
         params.put("systemId", systemId);
         params.put("interfaceId", interfaceId);
         params.put("interfaceName", interfaceName);
+        params.put("protocolType", protocolType);
         params.put("interfaceVersion", interfaceVersion);
 
         // 2.构建请求路径
@@ -82,10 +102,25 @@ public class GatewayCenterService {
         }
     }
 
+    /**
+     * 注册应用服务接口方法信息
+     *
+     * @param address         网关管理中心地址
+     * @param systemId        系统唯一ID
+     * @param interfaceId     接口唯一ID
+     * @param methodId        方法唯一ID
+     * @param methodName      方法名称
+     * @param parameterTypes  参数类型
+     * @param parameterName   参数名称
+     * @param uri             请求URI
+     * @param httpCommandType HTTP 请求命令类型
+     * @param auth             认证方式
+     */
     public void doRegisterApplicationInterfaceMethod(String address, String systemId,
                                                      String interfaceId, String methodId,
                                                      String methodName, String parameterTypes,
-                                                     String uri, String httpCommandType, Integer auth) {
+                                                     String parameterName, String uri,
+                                                     String httpCommandType, Integer auth) {
 
         // 1.构建参数
         HashMap<String, Object> params = new HashMap<>();
@@ -94,6 +129,7 @@ public class GatewayCenterService {
         params.put("methodId", methodId);
         params.put("methodName", methodName);
         params.put("parameterTypes", parameterTypes);
+        params.put("parameterName", parameterName);
         params.put("uri", uri);
         params.put("httpCommandType", httpCommandType);
         params.put("auth", auth);

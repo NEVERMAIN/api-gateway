@@ -8,14 +8,14 @@ import io.github.NEVERMAIN.gateway.center.api.response.Response;
  */
 public interface IRpcRegisterManage {
 
-    Response<Boolean> registerApplication(String systemId, String systemName, String systemType, String systemRegistry);
+    Response<Boolean> registerApplication(String systemId, String systemName, String systemRegistry, String systemAddress);
 
 
-    Response<Boolean> registerApplicationInterface(String systemId, String interfaceId, String interfaceName, String interfaceVersion);
+    Response<Boolean> registerApplicationInterface(String systemId, String interfaceId, String interfaceName, String protocolType, String interfaceVersion);
 
-    Response< Boolean> registerApplicationInterfaceMethod(String systemId, String interfaceId, String methodId,
-                                                          String methodName, String parameterTypes,String uri,
-                                                          String httpCommandType , Integer auth);
+    Response<Boolean> registerApplicationInterfaceMethod(String systemId, String interfaceId, String methodId,
+                                                         String methodName, String parameterTypes, String uri,
+                                                         String httpCommandType, Integer auth);
 
     Response<Boolean> registerEvent(String systemId);
 

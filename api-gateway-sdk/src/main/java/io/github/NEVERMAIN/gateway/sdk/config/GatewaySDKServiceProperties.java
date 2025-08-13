@@ -13,6 +13,8 @@ public class GatewaySDKServiceProperties {
     private String systemName;
     /** RPC注册中心:  zookeeper://127.0.0.1:2181 */
     private String systemRegistry;
+    /** 系统地址: http://127.0.0.1:8080 */
+    private String systemAddress;
 
     public String getAddress() {
         return address;
@@ -44,5 +46,13 @@ public class GatewaySDKServiceProperties {
 
     public void setSystemRegistry(String systemRegistry) {
         this.systemRegistry = systemRegistry;
+    }
+
+    public String getSystemAddress() {
+        return systemAddress;
+    }
+
+    public void setSystemAddress(String systemAddress) {
+        this.systemAddress = systemAddress;
     }
 }

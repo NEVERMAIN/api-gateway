@@ -118,7 +118,6 @@ public class ConfigManageRepository implements IConfigManageRepository {
             ApplicationSystemVO applicationSystemVO = new ApplicationSystemVO();
             applicationSystemVO.setSystemId(applicationSystem.getSystemId());
             applicationSystemVO.setSystemName(applicationSystem.getSystemName());
-            applicationSystemVO.setSystemType(applicationSystem.getSystemType());
             applicationSystemVO.setSystemRegistry(applicationSystem.getSystemRegistry());
             applicationSystemVO.setSystemAddress(applicationSystem.getSystemAddress());
             // 添加到列表中
@@ -172,7 +171,6 @@ public class ConfigManageRepository implements IConfigManageRepository {
             applicationInterfaceMethodVO.setInterfaceId(applicationInterfaceMethod.getInterfaceId());
             applicationInterfaceMethodVO.setMethodId(applicationInterfaceMethod.getMethodId());
             applicationInterfaceMethodVO.setMethodName(applicationInterfaceMethod.getMethodName());
-            applicationInterfaceMethodVO.setProtocolType(applicationInterfaceMethod.getProtocolType());
             applicationInterfaceMethodVO.setParameterType(applicationInterfaceMethod.getParameterType());
             applicationInterfaceMethodVO.setParameterName(applicationInterfaceMethod.getParameterName());
             applicationInterfaceMethodVO.setUri(applicationInterfaceMethod.getUri());

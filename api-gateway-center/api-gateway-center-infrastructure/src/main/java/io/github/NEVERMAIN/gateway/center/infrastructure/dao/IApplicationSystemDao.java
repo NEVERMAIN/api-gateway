@@ -17,4 +17,8 @@ public interface IApplicationSystemDao {
     List<ApplicationSystem> queryApplicationSystemListByPage(OperationRequest<ApplicationSystemDataVO> req);
 
     int queryApplicationSystemCountByPage(OperationRequest<ApplicationSystemDataVO> req);
+
+    ApplicationSystem queryApplicationSystemBySystemId(String systemId);
+
+    Boolean update(ApplicationSystem applicationSystem);
 }

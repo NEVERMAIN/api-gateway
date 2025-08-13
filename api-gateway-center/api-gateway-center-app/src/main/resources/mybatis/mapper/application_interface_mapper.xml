@@ -20,9 +20,19 @@
         VALUES (#{systemId}, #{interfaceId}, #{interfaceName}, #{protocolType} , #{interfaceVersion}, now(), now())
     </insert>
 
+    <update id="update">
+        UPDATE application_interface
+        SET interface_name    = #{interfaceName},
+            protocol_type     = #{protocolType},
+            interface_version = #{interfaceVersion},
+            update_time       = now()
+        WHERE system_id = #{systemId}
+          AND interface_id = #{interfaceId}
+    </update>
+
     <select id="queryApplicationInterfaceList"
            resultMap="ApplicationInterfaceMap">
-        SELECT system_id, interface_id, interface_name, protocol_type  ,  interface_version
+        SELECT system_id, interface_id, interface_name, protocol_type ,  interface_version
         FROM application_interface
         WHERE system_id = #{systemId}
     </select>
@@ -69,6 +79,14 @@
                 AND interface_id = #{data.interfaceId}
             </if>
         </where>
+    </select>
+
+    <select id="queryApplicationInterface"
+            resultMap="ApplicationInterfaceMap">
+        SELECT system_id, interface_id, interface_name, protocol_type ,interface_version
+        FROM application_interface
+        WHERE system_id = #{systemId}
+          AND interface_id = #{interfaceId}
     </select>
 
 

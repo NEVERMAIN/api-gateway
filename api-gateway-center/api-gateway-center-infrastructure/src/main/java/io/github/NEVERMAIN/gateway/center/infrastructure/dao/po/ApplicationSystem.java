@@ -24,10 +24,6 @@ public class ApplicationSystem {
      */
     private String systemName;
     /**
-     * 系统类型：RPC、HTTP
-     */
-    private String systemType;
-    /**
      * 系统注册中心：ZK、ETCD、NACOS
      */
     private String systemRegistry;

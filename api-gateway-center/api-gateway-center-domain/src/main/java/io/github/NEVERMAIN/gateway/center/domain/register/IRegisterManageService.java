@@ -7,6 +7,11 @@ import io.github.NEVERMAIN.gateway.center.domain.register.model.entity.Applicati
 
 public interface IRegisterManageService {
 
+    /**
+     * 注册系统应用信息
+     * @param applicationSystemEntity
+     * @return
+     */
     Boolean registerApplication(ApplicationSystemEntity applicationSystemEntity);
 
     Boolean registerApplicationInterface(ApplicationInterfaceEntity applicationInterfaceEntity);

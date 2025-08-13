@@ -19,4 +19,8 @@ public interface IApplicationInterfaceDao {
     List<ApplicationInterface> queryApplicationInterfaceListByPage(OperationRequest<ApplicationInterfaceDataVO> req);
 
     int queryApplicationInterfaceListCountByPage(OperationRequest<ApplicationInterfaceDataVO> req);
+
+    ApplicationInterface queryApplicationInterface(ApplicationInterface applicationInterface);
+
+    Boolean update(ApplicationInterface applicationInterface);
 }

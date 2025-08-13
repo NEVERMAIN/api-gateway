@@ -122,7 +122,6 @@ public class DataOperationManageRepository implements IDataOperationManageReposi
             ApplicationSystemDataVO applicationSystemDataVO = new ApplicationSystemDataVO();
             applicationSystemDataVO.setSystemId(applicationSystem.getSystemId());
             applicationSystemDataVO.setSystemName(applicationSystem.getSystemName());
-            applicationSystemDataVO.setSystemType(applicationSystem.getSystemType());
             applicationSystemDataVO.setSystemRegistry(applicationSystem.getSystemRegistry());
 
             applicationSystemDataVOS.add(applicationSystemDataVO);

@@ -7,7 +7,6 @@
         <id column="id" property="id"/>
         <id column="system_id" property="systemId"/>
         <id column="system_name" property="systemName"/>
-        <id column="system_type" property="systemType"/>
         <id column="system_registry" property="systemRegistry"/>
         <id column="system_address" property="systemAddress"/>
         <id column="create_time" property="createTime"/>
@@ -15,14 +14,22 @@
     </resultMap>
 
     <insert id="insert">
-        insert into application_system(system_id, system_name, system_type, system_registry,system_address, create_time, update_time)
-        values (#{systemId}, #{systemName}, #{systemType},  #{systemRegistry}, now(), now())
+        insert into application_system(system_id, system_name, system_registry,system_address, create_time, update_time)
+        values (#{systemId}, #{systemName}, #{systemRegistry}, #{systemAddress} , now(), now())
     </insert>
 
+    <update id="update" parameterType="io.github.NEVERMAIN.gateway.center.infrastructure.dao.po.ApplicationSystem">
+        UPDATE application_system
+        SET system_name     = #{systemName},
+            system_registry = #{systemRegistry},
+            system_address  = #{systemAddress},
+            update_time     = now()
+        WHERE system_id = #{systemId}
+    </update>
 
     <select id="queryApplicationSystemList"
             resultMap="ApplicationSystemMap">
-        SELECT system_id, system_name, system_type, system_registry,system_address
+        SELECT system_id, system_name , system_registry, system_address
         FROM application_system
         WHERE system_id IN
         <foreach collection="systemIdList" index="idx" item="item" open="(" close=")" separator=",">
@@ -33,7 +40,7 @@
     <select id="queryApplicationSystemListByPage"
             parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
             resultMap="ApplicationSystemMap">
-        SELECT id, system_id, system_name, system_type, system_registry,system_address, create_time, update_time
+        SELECT id, system_id, system_name , system_registry, system_address, create_time, update_time
         FROM application_system
         <where>
             <if test="data != null and data.systemId != '' ">
@@ -60,6 +67,13 @@
                 AND system_name = #{data.systemName}
             </if>
         </where>
+    </select>
+
+    <select id="queryApplicationSystemBySystemId"
+            resultMap="ApplicationSystemMap">
+        SELECT system_id, system_name, system_registry, system_address
+        FROM application_system
+        WHERE system_id = #{systemId}
     </select>
 
 

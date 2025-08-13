@@ -22,6 +22,10 @@ public class ApplicationInterfaceEntity {
      */
     private String interfaceName;
     /**
+     * 协议类型
+     */
+    private String protocolType;
+    /**
      * 接口版本
      */
     private String interfaceVersion;

@@ -17,7 +17,7 @@ import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 @CrossOrigin("*")
 @RequestMapping("/wg/admin/register")
 @Slf4j
-public class RpcRegisterManageController implements IRpcRegisterManage {
+public class RpcRegisterManageController {
 
     @Resource
     private IRegisterManageService registerManageService;
@@ -27,9 +27,8 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
 
 
     @PostMapping(value = "registerApplication", produces = "application/json;charset=UTF-8")
-    @Override
     public Response<Boolean> registerApplication(@RequestParam String systemId, @RequestParam String systemName,
-                                                 @RequestParam String systemType, @RequestParam String systemRegistry) {
+                                                 @RequestParam String systemRegistry, @RequestParam String systemAddress) {
 
         try {
             log.info("注册应用服务 systemId:{}", systemId);
@@ -37,8 +36,8 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
             ApplicationSystemEntity applicationSystemEntity = new ApplicationSystemEntity();
             applicationSystemEntity.setSystemId(systemId);
             applicationSystemEntity.setSystemName(systemName);
-            applicationSystemEntity.setSystemType(systemType);
             applicationSystemEntity.setSystemRegistry(systemRegistry);
+            applicationSystemEntity.setSystemAddress(systemAddress);
 
             // 2.保存
             Boolean result = registerManageService.registerApplication(applicationSystemEntity);
@@ -69,10 +68,10 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
     }
 
     @PostMapping(value = "registerApplicationInterface", produces = "application/json;charset=UTF-8")
-    @Override
     public Response<Boolean> registerApplicationInterface(
             @RequestParam String systemId, @RequestParam String interfaceId,
-            @RequestParam String interfaceName, @RequestParam String interfaceVersion) {
+            @RequestParam String interfaceName, @RequestParam String protocolType,
+            @RequestParam String interfaceVersion) {
 
         try {
             log.info("注册应用接口 systemId：{} interfaceId：{}", systemId, interfaceId);
@@ -81,6 +80,7 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
             applicationInterfaceEntity.setSystemId(systemId);
             applicationInterfaceEntity.setInterfaceId(interfaceId);
             applicationInterfaceEntity.setInterfaceName(interfaceName);
+            applicationInterfaceEntity.setProtocolType(protocolType);
             applicationInterfaceEntity.setInterfaceVersion(interfaceVersion);
 
             // 2.保存
@@ -113,12 +113,12 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
     }
 
     @PostMapping(value = "registerApplicationInterfaceMethod", produces = "application/json;charset=UTF-8")
-    @Override
     public Response<Boolean> registerApplicationInterfaceMethod(@RequestParam String systemId,
                                                                 @RequestParam String interfaceId,
                                                                 @RequestParam String methodId,
                                                                 @RequestParam String methodName,
                                                                 @RequestParam String parameterTypes,
+                                                                @RequestParam String parameterName,
                                                                 @RequestParam String uri,
                                                                 @RequestParam String httpCommandType,
                                                                 @RequestParam Integer auth) {
@@ -131,6 +131,7 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
             applicationInterfaceMethodEntity.setMethodId(methodId);
             applicationInterfaceMethodEntity.setMethodName(methodName);
             applicationInterfaceMethodEntity.setParameterType(parameterTypes);
+            applicationInterfaceMethodEntity.setParameterName(parameterName);
             applicationInterfaceMethodEntity.setUri(uri);
             applicationInterfaceMethodEntity.setHttpCommandType(httpCommandType);
             applicationInterfaceMethodEntity.setAuth(auth);
@@ -164,11 +165,10 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
     }
 
     @PostMapping(value = "registerEvent", produces = "application/json;charset=utf-8")
-    @Override
     public Response<Boolean> registerEvent(@RequestParam String systemId) {
 
-        try{
-            log.info("应用信息注册完成通知 systemId:{}",systemId);
+        try {
+            log.info("应用信息注册完成通知 systemId:{}", systemId);
             // 推送注册信息
             Boolean result = configManageService.registerEvent(systemId);
 
@@ -179,7 +179,7 @@ public class RpcRegisterManageController implements IRpcRegisterManage {
                     .data(result)
                     .build();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("应用信息注册完成通知失败 systemId：{}", systemId, e);
             return Response.<Boolean>builder()
                     .code(ResponseCode.UN_ERROR.getCode())

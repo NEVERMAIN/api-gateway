@@ -10,7 +10,6 @@
         <id column="interface_id" property="interfaceId"/>
         <id column="method_id" property="methodId"/>
         <id column="method_name" property="methodName"/>
-        <id column="protocol_type" property="protocolType"/>
         <id column="parameter_type" property="parameterType"/>
         <id column="parameter_name" property="parameterName"/>
         <id column="uri" property="uri"/>
@@ -23,16 +22,30 @@
 
     <insert id="insert">
         INSERT INTO application_interface_method
-        (system_id, interface_id, method_id, method_name, protocol_type ,parameter_type, parameter_name ,uri,
+        (system_id, interface_id, method_id, method_name ,parameter_type, parameter_name ,uri,
          auth, http_command_type, create_time, update_time)
-        VALUES (#{systemId}, #{interfaceId}, #{methodId}, #{methodName}, #{protocolType} , #{parameterType}, #{parameterName} , #{uri}, #{auth},
+        VALUES (#{systemId}, #{interfaceId}, #{methodId}, #{methodName}, #{parameterType}, #{parameterName} , #{uri}, #{auth},
                 #{httpCommandType}, now(), now())
     </insert>
+
+    <update id="update">
+        UPDATE application_interface_method
+        SET method_name       = #{methodName},
+            parameter_type    = #{parameterType},
+            parameter_name    = #{parameterName},
+            uri               = #{uri},
+            auth              = #{auth},
+            http_command_type = #{httpCommandType},
+            update_time       = now()
+        WHERE system_id = #{systemId}
+          AND interface_id = #{interfaceId}
+          AND method_id = #{methodId}
+    </update>
 
 
     <select id="queryApplicationInterfaceMethodList"
             resultMap="ApplicationInterfaceMethodMap">
-        SELECT system_id,   interface_id,  method_id,  method_name, protocol_type ,  parameter_type, parameter_name , uri,  auth,  http_command_type
+        SELECT system_id,   interface_id,  method_id,  method_name ,  parameter_type, parameter_name , uri,  auth,  http_command_type
         FROM application_interface_method
         WHERE system_id = #{systemId}
           AND interface_id = #{interfaceId}
@@ -57,7 +70,7 @@
     <select id="queryApplicationInterfaceMethodListByPage"
             parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
            resultMap="ApplicationInterfaceMethodMap">
-        SELECT id ,system_id, interface_id, method_id, method_name, protocol_type , parameter_type, parameter_name ,uri, auth, http_command_type, create_time, update_time
+        SELECT id ,system_id, interface_id, method_id, method_name , parameter_type, parameter_name ,uri, auth, http_command_type, create_time, update_time
         FROM application_interface_method
         <where>
             <if test="data != null and data.systemId != ''">
@@ -69,6 +82,16 @@
         </where>
         ORDER BY id DESC
         LIMIT #{pageStart}, #{pageSize}
+    </select>
+
+    <select id="queryApplicationInterfaceMethod"
+            parameterType="io.github.NEVERMAIN.gateway.center.infrastructure.dao.po.ApplicationInterfaceMethod"
+            resultMap="ApplicationInterfaceMethodMap">
+        SELECT system_id,   interface_id,  method_id,  method_name ,  parameter_type, parameter_name , uri,  auth,  http_command_type
+        FROM application_interface_method
+        WHERE system_id = #{systemId}
+          AND interface_id = #{interfaceId}
+          AND method_id = #{methodId}
     </select>
 
 

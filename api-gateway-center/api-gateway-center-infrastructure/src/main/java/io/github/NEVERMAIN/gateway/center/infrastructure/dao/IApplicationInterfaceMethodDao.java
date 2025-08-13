@@ -19,4 +19,8 @@ public interface IApplicationInterfaceMethodDao {
     int queryApplicationInterfaceMethodListCountByPage(OperationRequest<ApplicationInterfaceMethodDataVO> operationRequest);
 
     List<ApplicationInterfaceMethod> queryApplicationInterfaceMethodListByPage(OperationRequest<ApplicationInterfaceMethodDataVO> operationRequest);
+
+    ApplicationInterfaceMethod queryApplicationInterfaceMethod(ApplicationInterfaceMethod applicationInterfaceMethod);
+
+    Boolean update(ApplicationInterfaceMethod applicationInterfaceMethod);
 }

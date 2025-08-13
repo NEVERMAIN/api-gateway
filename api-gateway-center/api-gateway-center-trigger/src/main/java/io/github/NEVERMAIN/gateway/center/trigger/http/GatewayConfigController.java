@@ -197,7 +197,6 @@ public class GatewayConfigController implements IGatewayConfigManager {
         ApplicationSystemRichInfoDTO.ApplicationSystemDTO applicationSystemDTO = new ApplicationSystemRichInfoDTO.ApplicationSystemDTO();
         applicationSystemDTO.setSystemId(applicationSystemVO.getSystemId());
         applicationSystemDTO.setSystemName(applicationSystemVO.getSystemName());
-        applicationSystemDTO.setSystemType(applicationSystemVO.getSystemType());
         applicationSystemDTO.setSystemRegistry(applicationSystemVO.getSystemRegistry());
         applicationSystemDTO.setSystemAddress(applicationSystemVO.getSystemAddress());
         // 1.网关下的接口列表
@@ -250,7 +249,6 @@ public class GatewayConfigController implements IGatewayConfigManager {
             applicationInterfaceMethodDTO.setInterfaceId(applicationInterfaceMethodVO.getInterfaceId());
             applicationInterfaceMethodDTO.setMethodId(applicationInterfaceMethodVO.getMethodId());
             applicationInterfaceMethodDTO.setMethodName(applicationInterfaceMethodVO.getMethodName());
-            applicationInterfaceMethodDTO.setProtocolType(applicationInterfaceMethodVO.getProtocolType());
             applicationInterfaceMethodDTO.setParameterType(applicationInterfaceMethodVO.getParameterType());
             applicationInterfaceMethodDTO.setParameterName(applicationInterfaceMethodVO.getParameterName());
             applicationInterfaceMethodDTO.setUri(applicationInterfaceMethodVO.getUri());

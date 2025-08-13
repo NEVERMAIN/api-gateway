@@ -28,47 +28,86 @@ public class RegisterManageRepository implements IRegisterManageRepository {
     @Override
     public Boolean registerApplication(ApplicationSystemEntity applicationSystemEntity) {
 
-        // 1.转换持久层数据
-        ApplicationSystem applicationSystem = new ApplicationSystem();
-        applicationSystem.setSystemId(applicationSystemEntity.getSystemId());
-        applicationSystem.setSystemName(applicationSystemEntity.getSystemName());
-        applicationSystem.setSystemType(applicationSystemEntity.getSystemType());
-        applicationSystem.setSystemRegistry(applicationSystemEntity.getSystemRegistry());
-
-        // 2.保存
-        return applicationSystemDao.insert(applicationSystem);
+        ApplicationSystem applicationSystem = applicationSystemDao.queryApplicationSystemBySystemId(applicationSystemEntity.getSystemId());
+        if (applicationSystem == null) {
+            applicationSystem = new ApplicationSystem();
+            applicationSystem.setSystemId(applicationSystemEntity.getSystemId());
+            applicationSystem.setSystemName(applicationSystemEntity.getSystemName());
+            applicationSystem.setSystemRegistry(applicationSystemEntity.getSystemRegistry());
+            applicationSystem.setSystemAddress(applicationSystemEntity.getSystemAddress());
+            // 2.保存
+            return applicationSystemDao.insert(applicationSystem);
+        } else {
+            // 直接修改查询到的对象，而不是重新创建
+            applicationSystem.setSystemName(applicationSystemEntity.getSystemName());
+            applicationSystem.setSystemRegistry(applicationSystemEntity.getSystemRegistry());
+            applicationSystem.setSystemAddress(applicationSystemEntity.getSystemAddress());
+            // 3.更新
+            return applicationSystemDao.update(applicationSystem);
+        }
     }
 
     @Override
     public Boolean registerApplicationInterface(ApplicationInterfaceEntity applicationInterfaceEntity) {
 
-        // 1.转换持久层数据
-        ApplicationInterface applicationInterface = new ApplicationInterface();
-        applicationInterface.setSystemId(applicationInterfaceEntity.getSystemId());
-        applicationInterface.setInterfaceId(applicationInterfaceEntity.getInterfaceId());
-        applicationInterface.setInterfaceName(applicationInterfaceEntity.getInterfaceName());
-        applicationInterface.setInterfaceVersion(applicationInterfaceEntity.getInterfaceVersion());
+        ApplicationInterface req = new ApplicationInterface();
+        req.setSystemId(applicationInterfaceEntity.getSystemId());
+        req.setInterfaceId(applicationInterfaceEntity.getInterfaceId());
 
-        // 2.保存
-        return applicationInterfaceDao.insert(applicationInterface);
+        ApplicationInterface applicationInterface = applicationInterfaceDao.queryApplicationInterface(req);
+        if (applicationInterface == null) {
+
+            applicationInterface = new ApplicationInterface();
+            applicationInterface.setSystemId(applicationInterfaceEntity.getSystemId());
+            applicationInterface.setInterfaceId(applicationInterfaceEntity.getInterfaceId());
+            applicationInterface.setInterfaceName(applicationInterfaceEntity.getInterfaceName());
+            applicationInterface.setProtocolType(applicationInterfaceEntity.getProtocolType());
+            applicationInterface.setInterfaceVersion(applicationInterfaceEntity.getInterfaceVersion());
+            // 2.保存
+            return applicationInterfaceDao.insert(applicationInterface);
+        } else {
+            applicationInterface.setInterfaceName(applicationInterfaceEntity.getInterfaceName());
+            applicationInterface.setProtocolType(applicationInterfaceEntity.getProtocolType());
+            applicationInterface.setInterfaceVersion(applicationInterfaceEntity.getInterfaceVersion());
+            // 3.更新
+            return applicationInterfaceDao.update(applicationInterface);
+        }
     }
 
     @Override
     public Boolean registerApplicationInterfaceMethod(ApplicationInterfaceMethodEntity applicationInterfaceMethodEntity) {
 
-        // 1.转换持久层数据
-        ApplicationInterfaceMethod applicationInterfaceMethod = new ApplicationInterfaceMethod();
-        applicationInterfaceMethod.setSystemId(applicationInterfaceMethodEntity.getSystemId());
-        applicationInterfaceMethod.setInterfaceId(applicationInterfaceMethodEntity.getInterfaceId());
-        applicationInterfaceMethod.setMethodId(applicationInterfaceMethodEntity.getMethodId());
-        applicationInterfaceMethod.setMethodName(applicationInterfaceMethodEntity.getMethodName());
-        applicationInterfaceMethod.setParameterType(applicationInterfaceMethodEntity.getParameterType());
-        applicationInterfaceMethod.setUri(applicationInterfaceMethodEntity.getUri());
-        applicationInterfaceMethod.setAuth(applicationInterfaceMethodEntity.getAuth());
-        applicationInterfaceMethod.setHttpCommandType(applicationInterfaceMethodEntity.getHttpCommandType());
+        // 1.判断服务接口是否存在
+        ApplicationInterfaceMethod req = new ApplicationInterfaceMethod();
+        req.setSystemId(applicationInterfaceMethodEntity.getSystemId());
+        req.setInterfaceId(applicationInterfaceMethodEntity.getInterfaceId());
+        req.setMethodId(applicationInterfaceMethodEntity.getMethodId());
 
-        // 2.保存
-        return applicationInterfaceMethodDao.insert(applicationInterfaceMethod);
+        ApplicationInterfaceMethod applicationInterfaceMethod = applicationInterfaceMethodDao.queryApplicationInterfaceMethod(req);
+        if (applicationInterfaceMethod == null) {
+             applicationInterfaceMethod = new ApplicationInterfaceMethod();
+            applicationInterfaceMethod.setSystemId(applicationInterfaceMethodEntity.getSystemId());
+            applicationInterfaceMethod.setInterfaceId(applicationInterfaceMethodEntity.getInterfaceId());
+            applicationInterfaceMethod.setMethodId(applicationInterfaceMethodEntity.getMethodId());
+            applicationInterfaceMethod.setMethodName(applicationInterfaceMethodEntity.getMethodName());
+            applicationInterfaceMethod.setParameterType(applicationInterfaceMethodEntity.getParameterType());
+            applicationInterfaceMethod.setParameterName(applicationInterfaceMethodEntity.getParameterName());
+            applicationInterfaceMethod.setUri(applicationInterfaceMethodEntity.getUri());
+            applicationInterfaceMethod.setAuth(applicationInterfaceMethodEntity.getAuth());
+            applicationInterfaceMethod.setHttpCommandType(applicationInterfaceMethodEntity.getHttpCommandType());
 
+            // 2.保存
+            return applicationInterfaceMethodDao.insert(applicationInterfaceMethod);
+        }else{
+
+            applicationInterfaceMethod.setMethodName(applicationInterfaceMethodEntity.getMethodName());
+            applicationInterfaceMethod.setParameterType(applicationInterfaceMethodEntity.getParameterType());
+            applicationInterfaceMethod.setParameterName(applicationInterfaceMethodEntity.getParameterName());
+            applicationInterfaceMethod.setUri(applicationInterfaceMethodEntity.getUri());
+            applicationInterfaceMethod.setAuth(applicationInterfaceMethodEntity.getAuth());
+            applicationInterfaceMethod.setHttpCommandType(applicationInterfaceMethodEntity.getHttpCommandType());
+
+            return applicationInterfaceMethodDao.update(applicationInterfaceMethod);
+        }
     }
 }
