@@ -25,6 +25,10 @@ public class ApplicationInterfaceMethodDTO {
      */
     private String parameterType;
     /**
+     * 参数名称
+     */
+    private String parameterName;
+    /**
      * 网关接口
      */
     private String uri;
@@ -102,5 +106,13 @@ public class ApplicationInterfaceMethodDTO {
 
     public void setHttpCommandType(String httpCommandType) {
         this.httpCommandType = httpCommandType;
+    }
+
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public void setParameterName(String parameterName) {
+        this.parameterName = parameterName;
     }
 }

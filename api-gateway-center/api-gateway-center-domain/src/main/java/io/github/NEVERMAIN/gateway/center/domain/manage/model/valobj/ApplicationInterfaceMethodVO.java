@@ -29,11 +29,19 @@ public class ApplicationInterfaceMethodVO {
      */
     private String methodName;
     /**
+     * 协议类型
+     */
+    private String protocolType;
+    /**
      * 参数类型(RPC 限定单参数注册):
      * new String[]{\"java.lang.String\"}、
      * new String[]{\"io.github.NEVERMAIN.gateway.rpc.dto.XReq\"}
      */
     private String parameterType;
+    /**
+     * 参数名称
+     */
+    private String parameterName;
     /**
      * 网关接口
      */

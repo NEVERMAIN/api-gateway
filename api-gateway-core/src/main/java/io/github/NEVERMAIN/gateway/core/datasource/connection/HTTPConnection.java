@@ -77,7 +77,7 @@ public class HTTPConnection implements Connection {
     }
 
     private String buildUrl(HttpStatement httpStatement) {
-        return httpStatement.getTargetAddress() + httpStatement.getUri();
+        return httpStatement.getSystemAddress() + httpStatement.getUri();
     }
 
 

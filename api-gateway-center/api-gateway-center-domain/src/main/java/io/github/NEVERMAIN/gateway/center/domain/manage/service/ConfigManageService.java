@@ -68,7 +68,7 @@ public class ConfigManageService implements IConfigManageService {
             systemIdList.add(systemId);
         }
 
-        // 2.查询系统ID对应的系统列表信息
+        // 2.查询系统 ID 对应的系统列表信息
         List<ApplicationSystemVO> allApplicationSystemVOList =
                 configManageRepository.queryApplicationSystemList(systemIdList);
         // 3.遍历系统列表

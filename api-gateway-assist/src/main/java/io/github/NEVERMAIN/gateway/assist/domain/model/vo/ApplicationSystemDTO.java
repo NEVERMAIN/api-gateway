@@ -17,9 +17,14 @@ public class ApplicationSystemDTO {
      */
     private String systemType;
     /**
-     * 系统注册中心：ZK、ETCD、NACOS
+     * 系统注册中心：zookeeper://192.168.198.138:2181
      */
     private String systemRegistry;
+    /**
+     * 系统地址 http://127.0.0.1:8080
+     */
+    private String systemAddress;
+
     /**
      * 应用接口信息列表
      */
@@ -66,5 +71,13 @@ public class ApplicationSystemDTO {
 
     public void setApplicationInterfaceDTOList(List<ApplicationInterfaceDTO> applicationInterfaceDTOList) {
         this.applicationInterfaceDTOList = applicationInterfaceDTOList;
+    }
+
+    public String getSystemAddress() {
+        return systemAddress;
+    }
+
+    public void setSystemAddress(String systemAddress) {
+        this.systemAddress = systemAddress;
     }
 }

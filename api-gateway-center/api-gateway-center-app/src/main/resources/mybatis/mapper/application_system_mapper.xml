@@ -9,19 +9,20 @@
         <id column="system_name" property="systemName"/>
         <id column="system_type" property="systemType"/>
         <id column="system_registry" property="systemRegistry"/>
+        <id column="system_address" property="systemAddress"/>
         <id column="create_time" property="createTime"/>
         <id column="update_time" property="updateTime"/>
     </resultMap>
 
     <insert id="insert">
-        insert into application_system(system_id, system_name, system_type, system_registry, create_time, update_time)
+        insert into application_system(system_id, system_name, system_type, system_registry,system_address, create_time, update_time)
         values (#{systemId}, #{systemName}, #{systemType},  #{systemRegistry}, now(), now())
     </insert>
 
 
     <select id="queryApplicationSystemList"
             resultMap="ApplicationSystemMap">
-        SELECT system_id, system_name, system_type, system_registry
+        SELECT system_id, system_name, system_type, system_registry,system_address
         FROM application_system
         WHERE system_id IN
         <foreach collection="systemIdList" index="idx" item="item" open="(" close=")" separator=",">
@@ -32,7 +33,7 @@
     <select id="queryApplicationSystemListByPage"
             parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
             resultMap="ApplicationSystemMap">
-        SELECT id, system_id, system_name, system_type, system_registry, create_time, update_time
+        SELECT id, system_id, system_name, system_type, system_registry,system_address, create_time, update_time
         FROM application_system
         <where>
             <if test="data != null and data.systemId != '' ">

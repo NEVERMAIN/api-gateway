@@ -8,7 +8,7 @@ import org.apache.dubbo.rpc.service.GenericService;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @description: Dubbo池化连接对象
+ * @descrption Dubbo池化连接对象
  */
 public class DubboPooledConnection implements Connection {
 

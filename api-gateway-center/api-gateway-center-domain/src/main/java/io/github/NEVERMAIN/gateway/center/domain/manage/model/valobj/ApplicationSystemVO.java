@@ -31,6 +31,10 @@ public class ApplicationSystemVO {
      */
     private String systemRegistry;
     /**
+     * 系统地址
+     */
+    private String systemAddress;
+    /**
      * 应用接口信息列表
      */
     private List<ApplicationInterfaceVO> applicationInterfaceVOList;

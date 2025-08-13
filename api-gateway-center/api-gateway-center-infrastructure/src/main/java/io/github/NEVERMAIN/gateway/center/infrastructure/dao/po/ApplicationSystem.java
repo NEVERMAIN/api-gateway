@@ -32,6 +32,10 @@ public class ApplicationSystem {
      */
     private String systemRegistry;
     /**
+     * 系统地址 ：http://IP:PORT、https://IP:PORT
+     */
+    private String systemAddress;
+    /**
      * 创建时间
      */
     private Date createTime;

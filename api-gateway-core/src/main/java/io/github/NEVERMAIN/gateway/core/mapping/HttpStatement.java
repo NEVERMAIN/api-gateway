@@ -52,7 +52,7 @@ public class HttpStatement {
      * 目标服务的地址
      * eg: http://127.0.0.1:8083
      */
-    private String targetAddress;
+    private String systemAddress;
     /**
      * 方法参数的名称
      * eg: str
@@ -130,12 +130,12 @@ public class HttpStatement {
         this.auth = auth;
     }
 
-    public String getTargetAddress() {
-        return targetAddress;
+    public String getSystemAddress() {
+        return systemAddress;
     }
 
-    public void setTargetAddress(String targetAddress) {
-        this.targetAddress = targetAddress;
+    public void setSystemAddress(String systemAddress) {
+        this.systemAddress = systemAddress;
     }
 
     public DataSourceType getSystemType() {

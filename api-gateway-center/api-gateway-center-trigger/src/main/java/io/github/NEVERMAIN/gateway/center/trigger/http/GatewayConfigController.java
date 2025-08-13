@@ -181,7 +181,7 @@ public class GatewayConfigController implements IGatewayConfigManager {
                 applicationSystemVOList.stream().map(this::getApplicationSystemDTOList).toList();
 
         applicationSystemRichInfoDTO.setApplicationSystemDTOList(ApplicationSystemDTOList);
-
+        // 3.返回转换后的数据
         return applicationSystemRichInfoDTO;
     }
 
@@ -199,6 +199,7 @@ public class GatewayConfigController implements IGatewayConfigManager {
         applicationSystemDTO.setSystemName(applicationSystemVO.getSystemName());
         applicationSystemDTO.setSystemType(applicationSystemVO.getSystemType());
         applicationSystemDTO.setSystemRegistry(applicationSystemVO.getSystemRegistry());
+        applicationSystemDTO.setSystemAddress(applicationSystemVO.getSystemAddress());
         // 1.网关下的接口列表
         List<ApplicationInterfaceVO> applicationInterfaceVOList = applicationSystemVO.getApplicationInterfaceVOList();
         List<ApplicationSystemRichInfoDTO.ApplicationInterfaceDTO> applicationInterfaceDTOList =
@@ -248,7 +249,9 @@ public class GatewayConfigController implements IGatewayConfigManager {
             applicationInterfaceMethodDTO.setInterfaceId(applicationInterfaceMethodVO.getInterfaceId());
             applicationInterfaceMethodDTO.setMethodId(applicationInterfaceMethodVO.getMethodId());
             applicationInterfaceMethodDTO.setMethodName(applicationInterfaceMethodVO.getMethodName());
+            applicationInterfaceMethodDTO.setProtocolType(applicationInterfaceMethodVO.getProtocolType());
             applicationInterfaceMethodDTO.setParameterType(applicationInterfaceMethodVO.getParameterType());
+            applicationInterfaceMethodDTO.setParameterName(applicationInterfaceMethodVO.getParameterName());
             applicationInterfaceMethodDTO.setUri(applicationInterfaceMethodVO.getUri());
             applicationInterfaceMethodDTO.setAuth(applicationInterfaceMethodVO.getAuth());
             applicationInterfaceMethodDTO.setHttpCommandType(applicationInterfaceMethodVO.getHttpCommandType());

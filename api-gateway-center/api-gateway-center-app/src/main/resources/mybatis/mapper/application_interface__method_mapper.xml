@@ -10,7 +10,9 @@
         <id column="interface_id" property="interfaceId"/>
         <id column="method_id" property="methodId"/>
         <id column="method_name" property="methodName"/>
+        <id column="protocol_type" property="protocolType"/>
         <id column="parameter_type" property="parameterType"/>
+        <id column="parameter_name" property="parameterName"/>
         <id column="uri" property="uri"/>
         <id column="auth" property="auth"/>
         <id column="http_command_type" property="httpCommandType"/>
@@ -21,16 +23,16 @@
 
     <insert id="insert">
         INSERT INTO application_interface_method
-        (system_id, interface_id, method_id, method_name, parameter_type, uri,
+        (system_id, interface_id, method_id, method_name, protocol_type ,parameter_type, parameter_name ,uri,
          auth, http_command_type, create_time, update_time)
-        VALUES (#{systemId}, #{interfaceId}, #{methodId}, #{methodName}, #{parameterType}, #{uri}, #{auth},
+        VALUES (#{systemId}, #{interfaceId}, #{methodId}, #{methodName}, #{protocolType} , #{parameterType}, #{parameterName} , #{uri}, #{auth},
                 #{httpCommandType}, now(), now())
     </insert>
 
 
     <select id="queryApplicationInterfaceMethodList"
             resultMap="ApplicationInterfaceMethodMap">
-        SELECT system_id,   interface_id,  method_id,  method_name,   parameter_type,  uri,  auth,  http_command_type
+        SELECT system_id,   interface_id,  method_id,  method_name, protocol_type ,  parameter_type, parameter_name , uri,  auth,  http_command_type
         FROM application_interface_method
         WHERE system_id = #{systemId}
           AND interface_id = #{interfaceId}
@@ -55,7 +57,7 @@
     <select id="queryApplicationInterfaceMethodListByPage"
             parameterType="io.github.NEVERMAIN.gateway.center.types.common.OperationRequest"
            resultMap="ApplicationInterfaceMethodMap">
-        SELECT id ,system_id, interface_id, method_id, method_name, parameter_type, uri, auth, http_command_type, create_time, update_time
+        SELECT id ,system_id, interface_id, method_id, method_name, protocol_type , parameter_type, parameter_name ,uri, auth, http_command_type, create_time, update_time
         FROM application_interface_method
         <where>
             <if test="data != null and data.systemId != ''">

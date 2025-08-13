@@ -43,6 +43,10 @@ public class ApplicationSystemRichInfoDTO {
          */
         private String systemRegistry;
         /**
+         * 系统地址
+         */
+        private String systemAddress;
+        /**
          * 应用接口信息列表
          */
         private List<ApplicationInterfaceDTO> applicationInterfaceDTOList;
@@ -100,11 +104,19 @@ public class ApplicationSystemRichInfoDTO {
          */
         private String methodName;
         /**
+         * 协议类型：RPC、HTTP
+         */
+        private String protocolType;
+        /**
          * 参数类型(RPC 限定单参数注册):
          * new String[]{\"java.lang.String\"}、
          * new String[]{\"io.github.NEVERMAIN.gateway.rpc.dto.XReq\"}
          */
         private String parameterType;
+        /**
+         * 参数名称
+         */
+        private String parameterName;
         /**
          * 网关接口
          */

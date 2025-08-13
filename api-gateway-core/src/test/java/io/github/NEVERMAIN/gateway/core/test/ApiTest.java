@@ -82,7 +82,7 @@ public class ApiTest {
         httpStatement03.setSystemType(DataSourceType.HTTP);
         httpStatement03.setMethodName("sayHi");
         httpStatement03.setUri("/api/v1/activity/sayHi");
-        httpStatement03.setTargetAddress("http://127.0.0.1:8082");
+        httpStatement03.setSystemAddress("http://127.0.0.1:8082");
         httpStatement03.setCommandType(HttpCommandType.GET);
         httpStatement03.setParameterType("java.lang.String");
         httpStatement03.setParameterName("str");
@@ -94,7 +94,7 @@ public class ApiTest {
         httpStatement04.setSystemType(DataSourceType.HTTP);
         httpStatement04.setMethodName("insert");
         httpStatement04.setUri("/api/v1/activity/insert");
-        httpStatement04.setTargetAddress("http://127.0.0.1:8082");
+        httpStatement04.setSystemAddress("http://127.0.0.1:8082");
         httpStatement04.setCommandType(HttpCommandType.POST);
         httpStatement04.setParameterType("io.github.NEVERMAIN.gateway.rpc.dto.XReq");
         httpStatement04.setParameterName("xReq");

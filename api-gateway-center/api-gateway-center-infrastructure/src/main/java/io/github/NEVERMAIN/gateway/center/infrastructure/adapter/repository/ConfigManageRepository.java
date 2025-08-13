@@ -120,6 +120,8 @@ public class ConfigManageRepository implements IConfigManageRepository {
             applicationSystemVO.setSystemName(applicationSystem.getSystemName());
             applicationSystemVO.setSystemType(applicationSystem.getSystemType());
             applicationSystemVO.setSystemRegistry(applicationSystem.getSystemRegistry());
+            applicationSystemVO.setSystemAddress(applicationSystem.getSystemAddress());
+            // 添加到列表中
             applicationSystemVOList.add(applicationSystemVO);
         });
 
@@ -140,7 +142,7 @@ public class ConfigManageRepository implements IConfigManageRepository {
             applicationInterfaceVO.setInterfaceId(applicationInterface.getInterfaceId());
             applicationInterfaceVO.setInterfaceName(applicationInterface.getInterfaceName());
             applicationInterfaceVO.setInterfaceVersion(applicationInterface.getInterfaceVersion());
-
+            // 放入列表中
             applicationInterfaceVOS.add(applicationInterfaceVO);
         });
 
@@ -156,22 +158,26 @@ public class ConfigManageRepository implements IConfigManageRepository {
         req.setInterfaceId(interfaceId);
 
         // 2.查询接口下的方法详情列表
-        List<ApplicationInterfaceMethod> applicationInterfaceMethodList = applicationInterfaceMethodDao.queryApplicationInterfaceMethodList(req);
+        List<ApplicationInterfaceMethod> applicationInterfaceMethodList =
+                applicationInterfaceMethodDao.queryApplicationInterfaceMethodList(req);
 
         // 3.转换数据
         ArrayList<ApplicationInterfaceMethodVO> list = new ArrayList<>(applicationInterfaceMethodList.size());
         applicationInterfaceMethodList.forEach(applicationInterfaceMethod -> {
 
             ApplicationInterfaceMethodVO applicationInterfaceMethodVO = new ApplicationInterfaceMethodVO();
+
             applicationInterfaceMethodVO.setSystemId(applicationInterfaceMethod.getSystemId());
             applicationInterfaceMethodVO.setInterfaceId(applicationInterfaceMethod.getInterfaceId());
             applicationInterfaceMethodVO.setMethodId(applicationInterfaceMethod.getMethodId());
             applicationInterfaceMethodVO.setMethodName(applicationInterfaceMethod.getMethodName());
+            applicationInterfaceMethodVO.setProtocolType(applicationInterfaceMethod.getProtocolType());
             applicationInterfaceMethodVO.setParameterType(applicationInterfaceMethod.getParameterType());
+            applicationInterfaceMethodVO.setParameterName(applicationInterfaceMethod.getParameterName());
             applicationInterfaceMethodVO.setUri(applicationInterfaceMethod.getUri());
             applicationInterfaceMethodVO.setAuth(applicationInterfaceMethod.getAuth());
             applicationInterfaceMethodVO.setHttpCommandType(applicationInterfaceMethod.getHttpCommandType());
-
+            // 放入到列表中
             list.add(applicationInterfaceMethodVO);
 
         });
