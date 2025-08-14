@@ -8,6 +8,7 @@ import io.github.NEVERMAIN.gateway.core.datasource.Connection;
 import io.github.NEVERMAIN.gateway.core.executor.Executor;
 import io.github.NEVERMAIN.gateway.core.executor.SimpleExecutor;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
+import io.github.NEVERMAIN.gateway.core.ratelimit.RedisClientFactory;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
@@ -30,6 +31,7 @@ public class Configuration {
     private int workNThreads = 4;
 
 
+
     private final MapperRegistry mapperRegistry = new MapperRegistry(this);
 
     /**
@@ -40,6 +42,20 @@ public class Configuration {
 
 
     private final IAuth auth = new AuthService();
+
+    /**
+     * 限流窗口时间
+     */
+    private String timeWindow = "1";
+    /**
+     * 限流最大请求数
+     */
+    private String maxRequests = "1000";
+    /**
+     * Redis 客户端工厂
+     */
+    private RedisClientFactory redisClientFactory = new RedisClientFactory();
+
 
     // RPC 应用服务配置项 api-gateway-test
     private final Map<String, ApplicationConfig> applicationConfigMap = new HashMap<>();
@@ -203,5 +219,25 @@ public class Configuration {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public RedisClientFactory getRedisClientFactory() {
+        return redisClientFactory;
+    }
+
+    public String getTimeWindow() {
+        return timeWindow;
+    }
+
+    public void setTimeWindow(String timeWindow) {
+        this.timeWindow = timeWindow;
+    }
+
+    public String getMaxRequests() {
+        return maxRequests;
+    }
+
+    public void setMaxRequests(String maxRequests) {
+        this.maxRequests = maxRequests;
     }
 }
