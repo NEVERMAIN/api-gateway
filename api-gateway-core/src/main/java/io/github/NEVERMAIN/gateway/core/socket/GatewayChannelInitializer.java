@@ -2,10 +2,7 @@ package io.github.NEVERMAIN.gateway.core.socket;
 
 import io.github.NEVERMAIN.gateway.core.session.Configuration;
 import io.github.NEVERMAIN.gateway.core.session.defaults.DefaultGatewaySessionFactory;
-import io.github.NEVERMAIN.gateway.core.socket.handlers.ApiRateLimitingHandler;
-import io.github.NEVERMAIN.gateway.core.socket.handlers.AuthorizationHandler;
-import io.github.NEVERMAIN.gateway.core.socket.handlers.GatewayServerHandler;
-import io.github.NEVERMAIN.gateway.core.socket.handlers.ProtocolDataHandler;
+import io.github.NEVERMAIN.gateway.core.socket.handlers.*;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -36,6 +33,7 @@ public class GatewayChannelInitializer extends ChannelInitializer<SocketChannel>
         pipeline.addLast(new ApiRateLimitingHandler(configuration));
         pipeline.addLast(new GatewayServerHandler(configuration));
         pipeline.addLast(new AuthorizationHandler(configuration));
-        pipeline.addLast(new ProtocolDataHandler(gatewaySessionFactory));
+//        pipeline.addLast(new ProtocolDataHandler(gatewaySessionFactory));
+        pipeline.addLast(new ProtectedProtocolDataHandler(gatewaySessionFactory));
     }
 }
