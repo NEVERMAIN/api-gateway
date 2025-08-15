@@ -4,6 +4,7 @@ import io.github.NEVERMAIN.gateway.core.authorization.IAuth;
 import io.github.NEVERMAIN.gateway.core.authorization.auth.AuthService;
 import io.github.NEVERMAIN.gateway.core.bind.IGenericReference;
 import io.github.NEVERMAIN.gateway.core.bind.MapperRegistry;
+import io.github.NEVERMAIN.gateway.core.circuitbreaker.CircuitBreakerFactory;
 import io.github.NEVERMAIN.gateway.core.datasource.Connection;
 import io.github.NEVERMAIN.gateway.core.executor.Executor;
 import io.github.NEVERMAIN.gateway.core.executor.SimpleExecutor;
@@ -30,8 +31,6 @@ public class Configuration {
     private int bossNThreads = 1;
     private int workNThreads = 4;
 
-
-
     private final MapperRegistry mapperRegistry = new MapperRegistry(this);
 
     /**
@@ -54,7 +53,13 @@ public class Configuration {
     /**
      * Redis 客户端工厂
      */
-    private RedisClientFactory redisClientFactory = new RedisClientFactory();
+    private final RedisClientFactory redisClientFactory = new RedisClientFactory();
+
+
+    /**
+     * 熔断器工厂
+     */
+    private final CircuitBreakerFactory circuitBreakerFactory = new CircuitBreakerFactory();
 
 
     // RPC 应用服务配置项 api-gateway-test
@@ -239,5 +244,9 @@ public class Configuration {
 
     public void setMaxRequests(String maxRequests) {
         this.maxRequests = maxRequests;
+    }
+
+    public CircuitBreakerFactory getCircuitBreakerFactory() {
+        return circuitBreakerFactory;
     }
 }

@@ -3,6 +3,7 @@ package io.github.NEVERMAIN.gateway.core.socket.handlers;
 import io.github.NEVERMAIN.gateway.core.bind.IGenericReference;
 import io.github.NEVERMAIN.gateway.core.circuitbreaker.CircuitBreakerFactory;
 import io.github.NEVERMAIN.gateway.core.executor.result.SessionResult;
+import io.github.NEVERMAIN.gateway.core.session.Configuration;
 import io.github.NEVERMAIN.gateway.core.session.GatewaySession;
 import io.github.NEVERMAIN.gateway.core.session.defaults.DefaultGatewaySessionFactory;
 import io.github.NEVERMAIN.gateway.core.socket.BaseHandler;
@@ -29,9 +30,12 @@ public class ProtectedProtocolDataHandler extends BaseHandler<FullHttpRequest> {
 
     private static final Logger log = LoggerFactory.getLogger(ProtectedProtocolDataHandler.class);
     private final DefaultGatewaySessionFactory gatewaySessionFactory;
+    private final Configuration configuration;
 
-    public ProtectedProtocolDataHandler(DefaultGatewaySessionFactory gatewaySessionFactory) {
+    public ProtectedProtocolDataHandler(DefaultGatewaySessionFactory gatewaySessionFactory,
+                                        Configuration configuration) {
         this.gatewaySessionFactory = gatewaySessionFactory;
+        this.configuration = configuration;
     }
 
     @Override
@@ -45,7 +49,8 @@ public class ProtectedProtocolDataHandler extends BaseHandler<FullHttpRequest> {
         Map<String, Object> args = requestParser.parse();
 
         // 2.根据 uri 获取熔断器
-        CircuitBreaker circuitBreader = CircuitBreakerFactory.getCircuitBreader(uri);
+        CircuitBreakerFactory circuitBreakerFactory = configuration.getCircuitBreakerFactory();
+        CircuitBreaker circuitBreader = circuitBreakerFactory.getCircuitBreader(uri);
 
         // 3.将后端调用包装成一个 Supplier
         Supplier<SessionResult> backendCallSupplier = () -> {

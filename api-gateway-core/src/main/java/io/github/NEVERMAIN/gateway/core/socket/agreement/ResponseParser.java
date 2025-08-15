@@ -2,17 +2,19 @@ package io.github.NEVERMAIN.gateway.core.socket.agreement;
 
 import com.alibaba.fastjson2.JSON;
 import io.netty.handler.codec.http.*;
+import org.slf4j.MDC;
 
 /**
  * @description 返回结果解析器
  */
 public class ResponseParser {
 
-    public DefaultFullHttpResponse parse(Object result){
+    public DefaultFullHttpResponse parse(Object result, HttpResponseStatus status) {
+
         // 返回信息控制
         DefaultFullHttpResponse response = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
-                HttpResponseStatus.OK
+                status
         );
 
         // 4.设置回写数据
@@ -23,7 +25,7 @@ public class ResponseParser {
         // 返回内容类型
         headers.add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON + "; charset=UTF-8");
         // 响应体长度
-        headers.add(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
+        headers.setInt(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         // 配置持久化连接
         headers.add(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         // 配置跨域
@@ -33,8 +35,12 @@ public class ResponseParser {
         headers.add(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
         return response;
+
     }
 
+    public DefaultFullHttpResponse parse(Object result) {
+        return parse(result, HttpResponseStatus.OK);
+    }
 
 
 }

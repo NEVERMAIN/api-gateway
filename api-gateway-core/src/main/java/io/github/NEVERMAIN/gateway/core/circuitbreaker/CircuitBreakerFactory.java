@@ -5,15 +5,18 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 
 import java.time.Duration;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 熔断降级的配置工厂
  */
 public class CircuitBreakerFactory {
 
-    private static final CircuitBreakerRegistry circuitBreakerRegistry ;
+    private  final CircuitBreakerRegistry circuitBreakerRegistry;
 
-    static {
+    private final ConcurrentHashMap<String, CircuitBreaker> breakers = new ConcurrentHashMap<>();
+
+    public CircuitBreakerFactory() {
         // 创建详细的熔断器配置
         CircuitBreakerConfig config = CircuitBreakerConfig.custom()
                 // 失败率阈值: 50%
@@ -26,8 +29,10 @@ public class CircuitBreakerFactory {
                 .waitDurationInOpenState(Duration.ofSeconds(30))
                 // 熔断器打开后，半开状态允许的调用次数: 5次
                 .permittedNumberOfCallsInHalfOpenState(5)
+                .slidingWindow(100, 10, CircuitBreakerConfig.SlidingWindowType.COUNT_BASED,
+                        CircuitBreakerConfig.SlidingWindowSynchronizationStrategy.SYNCHRONIZED)
                 // 禁用完整的堆栈跟踪以减少日志噪音
-                .writableStackTraceEnabled( false)
+                .writableStackTraceEnabled(false)
                 .build();
 
         // 使用该默认配置创建一个注册表
@@ -36,11 +41,12 @@ public class CircuitBreakerFactory {
 
     /**
      * 根据后端服务名获取或创建一个熔断器实例
-     * @param backendName 后端服务名
+     *
+     * @param apiKey 后端服务名
      * @return CircuitBreaker 实例
      */
-    public static CircuitBreaker getCircuitBreader(String backendName) {
-        return circuitBreakerRegistry.circuitBreaker(backendName);
+    public  CircuitBreaker getCircuitBreader(String apiKey) {
+        return breakers.computeIfAbsent(apiKey, k -> circuitBreakerRegistry.circuitBreaker(apiKey));
     }
 
 }

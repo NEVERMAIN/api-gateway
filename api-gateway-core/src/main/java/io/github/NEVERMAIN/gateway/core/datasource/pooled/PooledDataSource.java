@@ -4,6 +4,7 @@ import io.github.NEVERMAIN.gateway.core.datasource.Connection;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSource;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
 import io.github.NEVERMAIN.gateway.core.datasource.connection.DubboPooledConnection;
+import io.github.NEVERMAIN.gateway.core.datasource.connection.HTTPConnection;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
 import io.github.NEVERMAIN.gateway.core.session.Configuration;
 import org.apache.dubbo.common.logger.FluentLogger;
@@ -33,7 +34,7 @@ public class PooledDataSource implements DataSource {
     public Connection getConnection() {
         switch(dataSourceType){
             case HTTP:
-                break;
+                return new HTTPConnection(httpStatement);
             case RPC:
                 // 1.创建服务的唯一标识
                 String key = buildServiceKey(httpStatement);

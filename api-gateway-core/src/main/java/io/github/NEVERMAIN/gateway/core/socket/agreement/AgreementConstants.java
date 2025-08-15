@@ -1,5 +1,6 @@
 package io.github.NEVERMAIN.gateway.core.socket.agreement;
 
+import io.github.NEVERMAIN.gateway.core.circuitbreaker.BreakerContext;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
 import io.netty.util.AttributeKey;
 
@@ -9,6 +10,9 @@ import io.netty.util.AttributeKey;
 public class AgreementConstants {
 
     public static final AttributeKey<HttpStatement> HTTP_STATEMENT = AttributeKey.valueOf("HttpStatement");
+
+    public static final AttributeKey<BreakerContext> BREAKER_CONTEXT = AttributeKey.valueOf("BreakerContext");
+
 
     public enum ResponseCode{
 

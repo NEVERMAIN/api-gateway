@@ -10,9 +10,12 @@ import io.github.NEVERMAIN.gateway.core.socket.agreement.GatewayResultMessage;
 import io.github.NEVERMAIN.gateway.core.socket.agreement.RequestParser;
 import io.github.NEVERMAIN.gateway.core.socket.agreement.ResponseParser;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,17 +49,20 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
             IGenericReference reference = gatewaySession.getMapper();
             SessionResult result = reference.invoke(args);
 
-            // 3.封装返回结果
+            // 构造一个 promise 对象
             DefaultFullHttpResponse response = new ResponseParser().parse("0000".equals(result.getCode()) ?
                     GatewayResultMessage.buildSuccess(result.getData()) :
                     GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！"));
+
             channel.writeAndFlush(response);
+            channel.newPromise().setSuccess();
 
         } catch (Exception e) {
-            // 4.封装返回结果
-            DefaultFullHttpResponse response =
-                    new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._502.getCode(), "网关协议调用失败！" + e.getMessage()));
-            channel.writeAndFlush(response);
+            // 异常场景
+            GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(
+                    AgreementConstants.ResponseCode._502.getCode(), "网关协议调用失败！" + e.getMessage());
+            DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.SERVICE_UNAVAILABLE);
+            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
         }
 
     }

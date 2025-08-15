@@ -10,6 +10,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,8 @@ public class AuthorizationHandler extends BaseHandler<FullHttpRequest> {
                     // 2.鉴权判断
                     if(null == token || "".equals( token)){
                         // 返回异常结果
-                        DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._400.getCode(), "对不起，你的 token 不合法！"));
+                        GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(AgreementConstants.ResponseCode._400.getCode(), "对不起，你的 token 不合法！");
+                        DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.BAD_REQUEST);
                         channel.writeAndFlush(response);
                     }
 
@@ -53,7 +55,8 @@ public class AuthorizationHandler extends BaseHandler<FullHttpRequest> {
                         ctx.fireChannelRead(request);
                     }else{
                         // 5.鉴权失败则返回错误信息
-                        DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._403.getCode(), "对不起，你无权访问此接口！"));
+                        GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(AgreementConstants.ResponseCode._403.getCode(), "对不起，你无权访问此接口！");
+                        DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.UNAUTHORIZED);
                         channel.writeAndFlush(response);
                     }
 
@@ -74,6 +77,5 @@ public class AuthorizationHandler extends BaseHandler<FullHttpRequest> {
                     , "网关协议调用失败!!! " + e.getMessage()));
             channel.writeAndFlush(response);
         }
-
     }
 }
