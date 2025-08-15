@@ -73,21 +73,23 @@ public class ProtectedProtocolDataHandler extends BaseHandler<FullHttpRequest> {
             // 业务调用成功
             log.info("服务调用成功 uri:{}", uri);
             // 封装返回结果
+            String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
             DefaultFullHttpResponse response = new ResponseParser().parse("0000".equals(sessionResult.getCode()) ?
-                    GatewayResultMessage.buildSuccess(sessionResult.getData()) :
-                    GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！"));
+                    GatewayResultMessage.buildSuccess(sessionResult.getData(), traceId) :
+                    GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！", traceId));
             channel.writeAndFlush(response);
 
         } catch (Exception e) {
+            String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
             // 业务调用失败 或 熔断器打开
             if (e instanceof CallNotPermittedException) {
                 // 这是熔断器打开的情况，请求被拒绝
                 log.warn("熔断器打开，请求被拒绝! uri: {}", uri, e);
-                handleFallback(channel, "服务暂时不可用，请求已被熔断。");
+                handleFallback(channel, "服务暂时不可用，请求已被熔断。", traceId);
             } else {
                 // 这是其他业务异常
                 log.error("后端调用发生异常! uri: {}", uri, e);
-                handleFallback(channel, "网关协议调用失败！" + e.getMessage());
+                handleFallback(channel, "网关协议调用失败！" + e.getMessage(), traceId);
             }
         }
     }
@@ -98,9 +100,9 @@ public class ProtectedProtocolDataHandler extends BaseHandler<FullHttpRequest> {
      * @param channel
      * @param message
      */
-    private void handleFallback(Channel channel, String message) {
+    private void handleFallback(Channel channel, String message, String traceId) {
         DefaultFullHttpResponse response = new ResponseParser().parse(
-                GatewayResultMessage.buildError(AgreementConstants.ResponseCode._503.getCode(), message)
+                GatewayResultMessage.buildError(AgreementConstants.ResponseCode._503.getCode(), message, traceId)
         );
         channel.writeAndFlush(response);
     }

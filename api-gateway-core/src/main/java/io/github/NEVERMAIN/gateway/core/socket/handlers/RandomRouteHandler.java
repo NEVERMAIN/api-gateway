@@ -24,15 +24,16 @@ public class RandomRouteHandler extends SimpleChannelInboundHandler<FullHttpRequ
         // 模拟 50% 成功，50% 失败
         boolean success = RANDOM.nextBoolean();
 
+        String traceId = ctx.channel().attr(AgreementConstants.TRACE_ID_KEY).get();
         if (success) {
             ChannelPromise channelPromise = ctx.channel().newPromise();
-            DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildSuccess("success"));
+            DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildSuccess("success", traceId));
             ctx.writeAndFlush(response);
             channelPromise.setSuccess();
         } else {
             GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(
                     AgreementConstants.ResponseCode._502.getCode(),
-                    "网关协议调用失败！");
+                    "网关协议调用失败！", traceId);
             DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.SERVICE_UNAVAILABLE);
             ctx.writeAndFlush(response);
         }

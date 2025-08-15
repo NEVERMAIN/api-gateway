@@ -13,6 +13,7 @@ public class AgreementConstants {
 
     public static final AttributeKey<BreakerContext> BREAKER_CONTEXT = AttributeKey.valueOf("BreakerContext");
 
+    public static final AttributeKey<String> TRACE_ID_KEY = AttributeKey.valueOf("gateway.traceId");
 
     public enum ResponseCode{
 

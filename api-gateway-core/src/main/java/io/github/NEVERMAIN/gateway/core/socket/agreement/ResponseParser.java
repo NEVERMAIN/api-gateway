@@ -28,6 +28,19 @@ public class ResponseParser {
         headers.setInt(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         // 配置持久化连接
         headers.add(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+
+        // traceId 回写
+        if(result instanceof GatewayResultMessage){
+            GatewayResultMessage gatewayResultMessage = (GatewayResultMessage) result;
+            String traceId = gatewayResultMessage.getTraceId();
+            if (traceId == null) {
+                // 兜底从 MDC 取（推荐由上游统一设置到 response 对象）
+                traceId = MDC.get("traceId");
+            }
+            if(traceId != null){
+                headers.add("X-Trace-Id", traceId);
+            }
+        }
         // 配置跨域
         headers.add(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         headers.add(HttpHeaderNames.ACCESS_CONTROL_ALLOW_HEADERS, "*");

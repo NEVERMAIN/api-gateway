@@ -50,17 +50,19 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
             SessionResult result = reference.invoke(args);
 
             // 构造一个 promise 对象
+            String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
             DefaultFullHttpResponse response = new ResponseParser().parse("0000".equals(result.getCode()) ?
-                    GatewayResultMessage.buildSuccess(result.getData()) :
-                    GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！"));
+                    GatewayResultMessage.buildSuccess(result.getData(), traceId) :
+                    GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！", traceId));
 
             channel.writeAndFlush(response);
             channel.newPromise().setSuccess();
 
         } catch (Exception e) {
             // 异常场景
+            String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
             GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(
-                    AgreementConstants.ResponseCode._502.getCode(), "网关协议调用失败！" + e.getMessage());
+                    AgreementConstants.ResponseCode._502.getCode(), "网关协议调用失败！" + e.getMessage(),traceId);
             DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.SERVICE_UNAVAILABLE);
             ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
         }
