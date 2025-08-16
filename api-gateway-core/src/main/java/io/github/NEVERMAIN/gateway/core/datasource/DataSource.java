@@ -10,5 +10,4 @@ public interface DataSource {
      * @return 连接
      */
     Connection getConnection();
-
 }

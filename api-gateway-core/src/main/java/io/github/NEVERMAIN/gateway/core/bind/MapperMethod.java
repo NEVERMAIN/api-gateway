@@ -22,7 +22,7 @@ public class MapperMethod {
     private final HttpCommandType commandType;
 
     public MapperMethod(String uri, Method method, Configuration configuration) {
-        this.methodName = configuration.getHttpStatement( uri).getMethodName();
+        this.methodName = configuration.getHttpStatement(uri).getMethodName();
         this.commandType = configuration.getHttpStatement(uri).getCommandType();
     }
 
@@ -30,10 +30,10 @@ public class MapperMethod {
         Object result = null;
         switch (commandType) {
             case GET:
-                result = gatewaySession.get(methodName, params);
+                result = gatewaySession.getAsync(methodName, params);
                 break;
             case POST:
-                result = gatewaySession.post(methodName, params);
+                result = gatewaySession.getAsync(methodName, params);
                 break;
             case PUT:
                 break;

@@ -2,6 +2,7 @@ package io.github.NEVERMAIN.gateway.core.datasource.connection;
 
 import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.core.JsonToken;
+import io.github.NEVERMAIN.gateway.core.datasource.BaseConnection;
 import io.github.NEVERMAIN.gateway.core.datasource.Connection;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpCommandType;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
@@ -24,11 +25,12 @@ import org.slf4j.MDC;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletionStage;
 
 /**
  * @description: HTTP 池化的连接对象
  */
-public class HTTPConnection implements Connection {
+public class HTTPConnection extends BaseConnection {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPConnection.class);
 
@@ -83,6 +85,5 @@ public class HTTPConnection implements Connection {
     private String buildUrl(HttpStatement httpStatement) {
         return httpStatement.getSystemAddress() + httpStatement.getUri();
     }
-
 
 }

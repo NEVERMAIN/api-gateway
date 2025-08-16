@@ -6,10 +6,10 @@ import io.github.NEVERMAIN.gateway.core.bind.IGenericReference;
 import io.github.NEVERMAIN.gateway.core.bind.MapperRegistry;
 import io.github.NEVERMAIN.gateway.core.circuitbreaker.CircuitBreakerFactory;
 import io.github.NEVERMAIN.gateway.core.datasource.Connection;
+import io.github.NEVERMAIN.gateway.core.datasource.connection.ApacheAsyncHttpClient;
 import io.github.NEVERMAIN.gateway.core.executor.Executor;
 import io.github.NEVERMAIN.gateway.core.executor.SimpleExecutor;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
-import io.github.NEVERMAIN.gateway.core.metrics.LocalMetricsCollector;
 import io.github.NEVERMAIN.gateway.core.metrics.MetricsCollector;
 import io.github.NEVERMAIN.gateway.core.metrics.PrometheusMetricsCollector;
 import io.github.NEVERMAIN.gateway.core.ratelimit.RedisClientFactory;
@@ -68,6 +68,11 @@ public class Configuration {
      * 本地监控
      */
     private final MetricsCollector metricsCollector = new PrometheusMetricsCollector();
+
+    /**
+     * HTTP 异步客户端
+     */
+    private final ApacheAsyncHttpClient apacheAsyncHttpClient = new ApacheAsyncHttpClient(this);
 
 
     // RPC 应用服务配置项 api-gateway-test
@@ -260,5 +265,9 @@ public class Configuration {
 
     public MetricsCollector getMetricsCollector() {
         return metricsCollector;
+    }
+
+    public ApacheAsyncHttpClient getApacheAsyncHttpClient() {
+        return apacheAsyncHttpClient;
     }
 }

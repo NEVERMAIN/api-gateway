@@ -1,5 +1,6 @@
 package io.github.NEVERMAIN.gateway.core.session.defaults;
 
+import io.github.NEVERMAIN.gateway.core.datasource.Connection;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSource;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceFactory;
 import io.github.NEVERMAIN.gateway.core.datasource.DataSourceType;
@@ -30,7 +31,8 @@ public class DefaultGatewaySessionFactory implements GatewaySessionFactory {
         dataSourceFactory.setProperties(configuration, httpStatement, httpStatement.getSystemType());
         DataSource datasource = dataSourceFactory.getDatasource();
         // 2.创建执行器
-        Executor executor = configuration.newExecutor(datasource.getConnection());
+        Connection connection = datasource.getConnection();
+        Executor executor = configuration.newExecutor(connection);
         // 3.创建会话
         return new DefaultGatewaySession(configuration, uri, executor);
     }

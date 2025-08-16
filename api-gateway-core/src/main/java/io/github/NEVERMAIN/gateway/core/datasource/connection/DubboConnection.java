@@ -1,5 +1,6 @@
 package io.github.NEVERMAIN.gateway.core.datasource.connection;
 
+import io.github.NEVERMAIN.gateway.core.datasource.BaseConnection;
 import io.github.NEVERMAIN.gateway.core.datasource.Connection;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
@@ -9,10 +10,12 @@ import org.apache.dubbo.rpc.service.GenericService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CompletionStage;
+
 /**
  * @description Dubbo 的 RPC 接口
  */
-public class DubboConnection implements Connection {
+public class DubboConnection extends BaseConnection {
 
     private static final Logger log = LoggerFactory.getLogger(DubboConnection.class);
     /**

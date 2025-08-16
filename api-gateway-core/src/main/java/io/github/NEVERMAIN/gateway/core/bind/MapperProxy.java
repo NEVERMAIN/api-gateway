@@ -26,11 +26,10 @@ public class MapperProxy implements InvocationHandler {
         this.uri = uri;
     }
 
-
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         MapperMethod mapperMethod = new MapperMethod(uri,method,gatewaySession.getConfiguration());
-        // 暂时只获取第0个参数
+        // 暂时只获取第 0 个参数
         Map<String,Object> params = (Map<String, Object>) args[0];
         return mapperMethod.execute(gatewaySession, params);
     }

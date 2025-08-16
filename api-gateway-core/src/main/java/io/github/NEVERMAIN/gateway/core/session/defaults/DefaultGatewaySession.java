@@ -32,9 +32,19 @@ public class DefaultGatewaySession implements GatewaySession {
     public Object get(String methodName, Map<String, Object> params) {
 
         HttpStatement httpStatement = configuration.getHttpStatement(uri);
-        try{
+        try {
             return executor.exec(httpStatement, params);
-        }catch (Exception e){
+        } catch (Exception e) {
+            throw new RuntimeException("Error exec get. Cause: " + e);
+        }
+    }
+
+    @Override
+    public Object getAsync(String methodName, Map<String, Object> params) {
+        HttpStatement httpStatement = configuration.getHttpStatement(uri);
+        try {
+            return executor.execAsync(httpStatement, params);
+        } catch (Exception e) {
             throw new RuntimeException("Error exec get. Cause: " + e);
         }
     }

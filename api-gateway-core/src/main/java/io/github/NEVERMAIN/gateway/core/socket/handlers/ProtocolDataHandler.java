@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.concurrent.CompletionStage;
 
 /**
  * @description 请求数据处理
@@ -49,31 +50,43 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
         String uri = requestParser.getUri();
         if (uri == null) return;
         Map<String, Object> args = requestParser.parse();
-
+        String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
         try {
             // 2.调用会话服务
             GatewaySession gatewaySession = gatewaySessionFactory.openSession(uri);
             IGenericReference reference = gatewaySession.getMapper();
-            SessionResult result = reference.invoke(args);
+            CompletionStage<Object> future = reference.$invokeAsync(args);
 
-            // 构造一个 promise 对象
-            String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
-            DefaultFullHttpResponse response = new ResponseParser().parse("0000".equals(result.getCode()) ?
-                    GatewayResultMessage.buildSuccess(result.getData(), traceId) :
-                    GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！", traceId));
+            // 3.异步处理结果并回写
+            future.whenComplete((result, throwable) -> {
+                ctx.executor().execute(() -> {
+                    DefaultFullHttpResponse response = null;
+                    if (throwable != null) {
+                        GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(
+                                AgreementConstants.ResponseCode._500.getCode(),
+                                "网关协议调用失败!!!" + throwable.getMessage(),
+                                traceId);
+                        response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.SERVICE_UNAVAILABLE);
+                    } else {
+                        response = new ResponseParser().parse(GatewayResultMessage.buildSuccess(result, traceId));
+                    }
 
-            // 统计监控信息
-            long duration = System.nanoTime() - startTime;
-            metricsCollector.recordRequest(uri);
-            metricsCollector.recordLatency(uri, duration);
-            metricsCollector.recordStatus(uri, response.status().code());
+                    // 统计监控信息
+                    long duration = System.nanoTime() - startTime;
+                    metricsCollector.recordRequest(uri);
+                    metricsCollector.recordLatency(uri, duration);
+                    metricsCollector.recordStatus(uri, response.status().code());
 
-            channel.writeAndFlush(response);
-            channel.newPromise().setSuccess();
+                    // 5.写回客户端
+                    channel.writeAndFlush(response)
+                            .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+                });
+
+            });
+
 
         } catch (Exception e) {
-            // 异常场景
-            String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
+            // 异常场景(同步失败)
             GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(
                     AgreementConstants.ResponseCode._502.getCode(), "网关协议调用失败！" + e.getMessage(), traceId);
             DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.SERVICE_UNAVAILABLE);

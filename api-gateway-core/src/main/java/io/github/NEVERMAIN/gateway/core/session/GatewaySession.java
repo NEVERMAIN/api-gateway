@@ -18,6 +18,14 @@ public interface GatewaySession {
     Object get(String  methodName, Map<String, Object> params);
 
     /**
+     * 根据 uri 异步调用
+     * @param methodName
+     * @param params
+     * @return
+     */
+    Object getAsync(String  methodName,Map<String,Object> params);
+
+    /**
      * 根据 uri 进行 RPC 泛化调用处理
      * @param methodName
      * @param params

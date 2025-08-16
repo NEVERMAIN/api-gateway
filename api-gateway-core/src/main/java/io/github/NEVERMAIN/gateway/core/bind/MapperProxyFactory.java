@@ -39,7 +39,6 @@ public class MapperProxyFactory {
         return genericReferenceCache.computeIfAbsent(uri,k -> {
 
             try{
-
                 // 1. 创建 InvocationHandler 实现泛化调用逻辑
                 InvocationHandler handler = new MapperProxy(uri,gatewaySession);
 
@@ -47,7 +46,7 @@ public class MapperProxyFactory {
                 Class<?> dynamicType = new ByteBuddy()
                         .subclass(Object.class)
                         .implement(IGenericReference.class)
-                        .method(ElementMatchers.named("invoke"))
+                        .method(ElementMatchers.named("$invokeAsync"))
                         .intercept(InvocationHandlerAdapter.of(handler))
                         .make()
                         .load(getClass().getClassLoader())
