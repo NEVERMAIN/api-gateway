@@ -11,6 +11,7 @@ import io.github.NEVERMAIN.gateway.core.executor.SimpleExecutor;
 import io.github.NEVERMAIN.gateway.core.mapping.HttpStatement;
 import io.github.NEVERMAIN.gateway.core.metrics.LocalMetricsCollector;
 import io.github.NEVERMAIN.gateway.core.metrics.MetricsCollector;
+import io.github.NEVERMAIN.gateway.core.metrics.PrometheusMetricsCollector;
 import io.github.NEVERMAIN.gateway.core.ratelimit.RedisClientFactory;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
@@ -66,7 +67,7 @@ public class Configuration {
     /**
      * 本地监控
      */
-    private final MetricsCollector metricsCollector = new LocalMetricsCollector();
+    private final MetricsCollector metricsCollector = new PrometheusMetricsCollector();
 
 
     // RPC 应用服务配置项 api-gateway-test

@@ -10,6 +10,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
 
 public class MetricsHandler extends BaseHandler<FullHttpRequest> {
 
@@ -27,9 +28,8 @@ public class MetricsHandler extends BaseHandler<FullHttpRequest> {
         if (request.uri().equals("/metrics")) {
             String metrics = metricsCollector.exportMetrics();
 
-            String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
-            GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildSuccess(metrics, traceId);
-            DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage);
+            DefaultFullHttpResponse response = new ResponseParser().parse(metrics);
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; version=0.0.4; charset=utf-8");
             ctx.writeAndFlush(response);
         } else {
             ctx.fireChannelRead(request.retain());

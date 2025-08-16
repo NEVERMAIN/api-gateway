@@ -44,13 +44,13 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
     protected void session(ChannelHandlerContext ctx, Channel channel, FullHttpRequest request) {
         log.info("网关接收请求【消息】 uri:{} method:{}", request.uri(), request.method());
         long startTime = System.nanoTime();
-        try {
-            // 1.解析请求参数
-            RequestParser requestParser = new RequestParser(request);
-            String uri = requestParser.getUri();
-            if (uri == null) return;
-            Map<String, Object> args = requestParser.parse();
+        // 1.解析请求参数
+        RequestParser requestParser = new RequestParser(request);
+        String uri = requestParser.getUri();
+        if (uri == null) return;
+        Map<String, Object> args = requestParser.parse();
 
+        try {
             // 2.调用会话服务
             GatewaySession gatewaySession = gatewaySessionFactory.openSession(uri);
             IGenericReference reference = gatewaySession.getMapper();
@@ -63,8 +63,8 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
                     GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！", traceId));
 
             // 统计监控信息
-            long duration = System.nanoTime() -startTime;
-            metricsCollector.recordRequest( uri);
+            long duration = System.nanoTime() - startTime;
+            metricsCollector.recordRequest(uri);
             metricsCollector.recordLatency(uri, duration);
             metricsCollector.recordStatus(uri, response.status().code());
 
@@ -75,8 +75,14 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
             // 异常场景
             String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
             GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(
-                    AgreementConstants.ResponseCode._502.getCode(), "网关协议调用失败！" + e.getMessage(),traceId);
+                    AgreementConstants.ResponseCode._502.getCode(), "网关协议调用失败！" + e.getMessage(), traceId);
             DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.SERVICE_UNAVAILABLE);
+
+            long duration = System.nanoTime() - startTime;
+            metricsCollector.recordRequest(uri);
+            metricsCollector.recordLatency(uri, duration);
+            metricsCollector.recordStatus(uri, response.status().code());
+
             ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
         }
 

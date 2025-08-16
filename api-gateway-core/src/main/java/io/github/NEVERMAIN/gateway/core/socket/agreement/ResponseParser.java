@@ -23,11 +23,11 @@ public class ResponseParser {
         // 头部信息设置
         HttpHeaders headers = response.headers();
         // 返回内容类型
-        headers.add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON + "; charset=UTF-8");
+        headers.set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON + "; charset=UTF-8");
         // 响应体长度
         headers.setInt(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         // 配置持久化连接
-        headers.add(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+        headers.set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
 
         // traceId 回写
         if(result instanceof GatewayResultMessage){
