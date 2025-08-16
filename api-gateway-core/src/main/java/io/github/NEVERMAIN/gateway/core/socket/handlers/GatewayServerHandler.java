@@ -31,6 +31,7 @@ public class GatewayServerHandler extends BaseHandler<FullHttpRequest> {
     protected void session(ChannelHandlerContext ctx, Channel channel, FullHttpRequest request) {
 
         log.info("网络接收请求【全局】 uri:{} method:{}", request.uri(), request.method());
+        String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
         try {
 
             // 1. 解析参数
@@ -48,7 +49,8 @@ public class GatewayServerHandler extends BaseHandler<FullHttpRequest> {
         } catch (Exception e) {
             // 4. 封装返回结果
             DefaultFullHttpResponse response =
-                    new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._500.getCode(), "网关协议调用失败！" + e.getMessage()));
+                    new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._500.getCode(),
+                            "网关协议调用失败！" + e.getMessage(), traceId));
             channel.writeAndFlush(response);
         }
     }

@@ -22,26 +22,28 @@ public class AuthorizationHandler extends BaseHandler<FullHttpRequest> {
     private static final Logger log = LoggerFactory.getLogger(AuthorizationHandler.class);
     private final Configuration configuration;
 
-    public AuthorizationHandler(Configuration configuration){
+    public AuthorizationHandler(Configuration configuration) {
         this.configuration = configuration;
     }
 
     @Override
     protected void session(ChannelHandlerContext ctx, Channel channel, FullHttpRequest request) {
-        log.info("网关接收请求【鉴权】 uri:{} method:{}",request.uri(),request.method());
-
-        try{
+        log.info("网关接收请求【鉴权】 uri:{} method:{}", request.uri(), request.method());
+        String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
+        try {
 
             HttpStatement httpStatement = channel.attr(AgreementConstants.HTTP_STATEMENT).get();
-            if(httpStatement.isAuth()){
-                try{
+            if (httpStatement.isAuth()) {
+                try {
                     // 1.鉴权信息
                     String uId = request.headers().get("uId");
                     String token = request.headers().get("token");
                     // 2.鉴权判断
-                    if(null == token || "".equals( token)){
+
+                    if (null == token || "".equals(token)) {
                         // 返回异常结果
-                        GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(AgreementConstants.ResponseCode._400.getCode(), "对不起，你的 token 不合法！");
+                        GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(AgreementConstants.ResponseCode._400.getCode(),
+                                "对不起，你的 token 不合法！", traceId);
                         DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.BAD_REQUEST);
                         channel.writeAndFlush(response);
                     }
@@ -50,31 +52,33 @@ public class AuthorizationHandler extends BaseHandler<FullHttpRequest> {
                     boolean status = configuration.authValidate(uId, token);
 
                     // 4.鉴权成功则直接放行
-                    if(status){
+                    if (status) {
                         request.retain();
                         ctx.fireChannelRead(request);
-                    }else{
+                    } else {
                         // 5.鉴权失败则返回错误信息
-                        GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(AgreementConstants.ResponseCode._403.getCode(), "对不起，你无权访问此接口！");
+                        GatewayResultMessage gatewayResultMessage = GatewayResultMessage.buildError(AgreementConstants.ResponseCode._403.getCode(),
+                                "对不起，你无权访问此接口！", traceId);
                         DefaultFullHttpResponse response = new ResponseParser().parse(gatewayResultMessage, HttpResponseStatus.UNAUTHORIZED);
                         channel.writeAndFlush(response);
                     }
 
-                }catch (Exception e){
-                    DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._403.getCode(), "对不起，你的鉴权不合法！"));
+                } catch (Exception e) {
+                    DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._403.getCode(),
+                            "对不起，你的鉴权不合法！", traceId));
                     channel.writeAndFlush(response);
                 }
 
-            }else{
+            } else {
                 // 不鉴权放行
                 request.retain();
                 ctx.fireChannelRead(request);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             // 4.封装返回结果
             DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(AgreementConstants.ResponseCode._500.getCode()
-                    , "网关协议调用失败!!! " + e.getMessage()));
+                    , "网关协议调用失败!!! " + e.getMessage(), traceId));
             channel.writeAndFlush(response);
         }
     }

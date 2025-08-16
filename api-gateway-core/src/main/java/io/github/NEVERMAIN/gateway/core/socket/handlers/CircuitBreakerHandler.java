@@ -33,6 +33,8 @@ public class CircuitBreakerHandler extends ChannelDuplexHandler {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
+        String traceId = ctx.channel().attr(AgreementConstants.TRACE_ID_KEY).get();
+
         if (msg instanceof FullHttpRequest) {
             FullHttpRequest request = (FullHttpRequest) msg;
             String apiKey = extractApiKey(request);
@@ -44,7 +46,7 @@ public class CircuitBreakerHandler extends ChannelDuplexHandler {
             if (!circuitBreader.tryAcquirePermission()) {
                 ReferenceCountUtil.release(request);
                 sendFallback(ctx, AgreementConstants.ResponseCode._503.getCode(),
-                        "Service unavailable, blocked by circuit breaker");
+                        "Service unavailable, blocked by circuit breaker", traceId);
                 return;
             }
 
@@ -61,17 +63,17 @@ public class CircuitBreakerHandler extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         // 仅在最终写回 HTTP 响应时与入站请求成对打点
-        if(msg instanceof HttpResponse){
+        if (msg instanceof HttpResponse) {
 
             BreakerContext breakerContext = ctx.channel().attr(AgreementConstants.BREAKER_CONTEXT).get();
-            if(breakerContext != null){
+            if (breakerContext != null) {
                 promise.addListener(future -> {
                     long duration = System.nanoTime() - breakerContext.getStartNano();
                     CircuitBreaker breaker = breakerContext.getBreaker();
 
-                    if(future.isSuccess()){
+                    if (future.isSuccess()) {
                         breaker.onSuccess(duration, TimeUnit.NANOSECONDS);
-                    }else{
+                    } else {
                         breaker.onError(duration, TimeUnit.NANOSECONDS, future.cause());
                     }
                 });
@@ -85,9 +87,9 @@ public class CircuitBreakerHandler extends ChannelDuplexHandler {
         return requestParser.getUri();
     }
 
-    private void sendFallback(ChannelHandlerContext ctx, String code, String message) {
+    private void sendFallback(ChannelHandlerContext ctx, String code, String message, String traceId) {
         DefaultFullHttpResponse response =
-                new ResponseParser().parse(GatewayResultMessage.buildError(code, message));
+                new ResponseParser().parse(GatewayResultMessage.buildError(code, message, traceId));
         ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 

@@ -20,6 +20,7 @@ import org.apache.hc.core5.net.URIBuilder;
 import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -52,11 +53,13 @@ public class HTTPConnection implements Connection {
 
         String url = buildUrl(httpStatement);
         HttpUriRequest request = null;
+        String traceId = MDC.get("traceId");
         try {
             if (HttpCommandType.GET.equals(httpStatement.getCommandType())) {
                 URI uri = new URIBuilder(url)
                         .addParameter(parametersName[0], args[0].toString()).build();
                 request = new HttpGet(uri);
+                request.setHeader("X-Trace-Id", traceId);
             } else if (HttpCommandType.POST.equals(httpStatement.getCommandType())) {
                 HttpPost httpPost = new HttpPost(url);
                 // 设置请求体
@@ -65,6 +68,7 @@ public class HTTPConnection implements Connection {
                 // 设置请求头
                 httpPost.setHeader("Accept", "application/json");
                 httpPost.setHeader("Content-Type", "application/json");
+                httpPost.setHeader("X-Trace-Id", traceId);
                 request = httpPost;
             }
 

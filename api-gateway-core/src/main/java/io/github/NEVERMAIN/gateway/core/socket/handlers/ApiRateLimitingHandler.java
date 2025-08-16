@@ -43,6 +43,7 @@ public class ApiRateLimitingHandler extends BaseHandler<FullHttpRequest> {
     protected void session(ChannelHandlerContext ctx, Channel channel, FullHttpRequest request) {
 
         logger.info("网关接收请求【限流】 uri:{} method:{}", request.uri(), request.method());
+        String traceId = channel.attr(AgreementConstants.TRACE_ID_KEY).get();
         // 1.定义限流规则
         RequestParser requestParser = new RequestParser(request);
         String uri = requestParser.getUri();
@@ -71,7 +72,7 @@ public class ApiRateLimitingHandler extends BaseHandler<FullHttpRequest> {
                 logger.info("key:{} 访问被拒绝(超出限额)", rateLimitKey);
                 DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(
                         AgreementConstants.ResponseCode._403.getCode(),
-                        "Too Many Requests,Rate limit exceeded"
+                        "Too Many Requests,Rate limit exceeded",traceId
                 ));
                 ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
             }
@@ -80,7 +81,7 @@ public class ApiRateLimitingHandler extends BaseHandler<FullHttpRequest> {
             logger.error("限流检查时 Redis 出错:{}", e.getMessage());
             DefaultFullHttpResponse response = new ResponseParser().parse(GatewayResultMessage.buildError(
                     AgreementConstants.ResponseCode._500.getCode(),
-                    "限流检查时 Redis 出错"
+                    "限流检查时 Redis 出错",traceId
             ));
             ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
         }

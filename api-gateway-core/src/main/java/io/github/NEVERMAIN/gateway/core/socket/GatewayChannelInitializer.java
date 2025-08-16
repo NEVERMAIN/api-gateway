@@ -30,6 +30,7 @@ public class GatewayChannelInitializer extends ChannelInitializer<SocketChannel>
         pipeline.addLast(new HttpRequestDecoder());
         pipeline.addLast(new HttpResponseEncoder());
         pipeline.addLast(new HttpObjectAggregator(1024 * 1024));
+        pipeline.addLast(new TraceContextHandler());
         pipeline.addLast(new GatewayServerHandler(configuration));
         pipeline.addLast(new AuthorizationHandler(configuration));
         pipeline.addLast(new ApiRateLimitingHandler(configuration));
