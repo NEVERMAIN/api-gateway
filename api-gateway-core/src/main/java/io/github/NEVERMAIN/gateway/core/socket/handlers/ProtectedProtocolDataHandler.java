@@ -67,7 +67,6 @@ public class ProtectedProtocolDataHandler extends BaseHandler<FullHttpRequest> {
         // 5.使用标准的 try-catch 块来执行并处理结果
         try {
             // 直接调用被包装后的 Supplier
-            // TODO 后续修改成 非阻塞 的调用
             SessionResult sessionResult = protectedSupplier.get();
 
             // 业务调用成功

@@ -29,7 +29,6 @@ public class DubboConnection extends BaseConnection {
         DubboBootstrap bootstrap = DubboBootstrap.newInstance();
         bootstrap.application(applicationConfig).registry(registryConfig).reference(referenceConfig).start();
         // 获取泛化调用服务
-        // TODO 后续修改成异步调用
          this.genericService = referenceConfig.get();
     }
 
