@@ -2,6 +2,8 @@ package io.github.NEVERMAIN.gateway.core.socket.handlers;
 
 import io.github.NEVERMAIN.gateway.core.bind.IGenericReference;
 import io.github.NEVERMAIN.gateway.core.executor.result.SessionResult;
+import io.github.NEVERMAIN.gateway.core.metrics.MetricsCollector;
+import io.github.NEVERMAIN.gateway.core.session.Configuration;
 import io.github.NEVERMAIN.gateway.core.session.GatewaySession;
 import io.github.NEVERMAIN.gateway.core.session.defaults.DefaultGatewaySessionFactory;
 import io.github.NEVERMAIN.gateway.core.socket.BaseHandler;
@@ -28,15 +30,20 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
 
     private static final Logger log = LoggerFactory.getLogger(ProtocolDataHandler.class);
     private final DefaultGatewaySessionFactory gatewaySessionFactory;
+    private final Configuration configuration;
+    private final MetricsCollector metricsCollector;
 
-    public ProtocolDataHandler(DefaultGatewaySessionFactory gatewaySessionFactory) {
+    public ProtocolDataHandler(DefaultGatewaySessionFactory gatewaySessionFactory,
+                               Configuration configuration) {
         this.gatewaySessionFactory = gatewaySessionFactory;
+        this.configuration = configuration;
+        this.metricsCollector = configuration.getMetricsCollector();
     }
 
     @Override
     protected void session(ChannelHandlerContext ctx, Channel channel, FullHttpRequest request) {
         log.info("网关接收请求【消息】 uri:{} method:{}", request.uri(), request.method());
-
+        long startTime = System.nanoTime();
         try {
             // 1.解析请求参数
             RequestParser requestParser = new RequestParser(request);
@@ -54,6 +61,12 @@ public class ProtocolDataHandler extends BaseHandler<FullHttpRequest> {
             DefaultFullHttpResponse response = new ResponseParser().parse("0000".equals(result.getCode()) ?
                     GatewayResultMessage.buildSuccess(result.getData(), traceId) :
                     GatewayResultMessage.buildError(AgreementConstants.ResponseCode._404.getCode(), "网关协议调用失败！", traceId));
+
+            // 统计监控信息
+            long duration = System.nanoTime() -startTime;
+            metricsCollector.recordRequest( uri);
+            metricsCollector.recordLatency(uri, duration);
+            metricsCollector.recordStatus(uri, response.status().code());
 
             channel.writeAndFlush(response);
             channel.newPromise().setSuccess();
